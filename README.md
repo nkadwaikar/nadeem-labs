@@ -26,9 +26,17 @@ All lab documents are organized in the `docs/` directory:
 
 Browse the documentation by navigating to the `docs/` folder or use the links below:
 
-- [Getting Started](docs/getting-started/)
-- [Tutorials](docs/tutorials/)
-- [Reference](docs/reference/)
+- [Getting Started](docs/getting-started/) - Start here for introductory guides
+- [Tutorials](docs/tutorials/) - Step-by-step tutorials and labs
+- [Reference](docs/reference/) - Quick reference materials
+
+### Publishing with GitHub Pages
+
+This repository is configured for GitHub Pages. To enable it:
+
+1. Go to repository Settings > Pages
+2. Select the branch (e.g., `main`) as the source
+3. Your documentation will be published at: `https://nkadwaikar.github.io/nadeem-labs/`
 
 ## 📝 Contributing
 
