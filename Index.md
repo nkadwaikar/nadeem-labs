@@ -43,7 +43,10 @@ This lab covers global content delivery using Front Door Standard in CDN mode �
 
 ---
 
-🛠️ Upcoming Labs
+
+## **🛠️ Upcoming Labs
+
+
 ### **Azure Front Door Rules Engine — Practical Scenarios
 A hands‑on collection of real‑world rule examples using the Front Door Rules Engine.  
 This lab will walk through redirects, rewrites, header adjustments, cache overrides, and a few classic “why is this rule not firing yet” troubleshooting moments.  
