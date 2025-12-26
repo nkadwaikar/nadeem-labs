@@ -1,8 +1,7 @@
 
 # **🚀 Cloud Engineering — Built With Precision and Occasional Coffee Spills**
 
-This site includes a few labs, small architectures, and notes I’ve created while working with Azure services.  
-Everything is written in a simple, easy‑to‑follow way… even on days when the coffee machine is judging me.
+A collection of Azure labs and architectures, written to stay simple, practical, and easy to revisit, fueled by equal parts cloud curiosity and coffee.
 
 ---
 
