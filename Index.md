@@ -44,7 +44,7 @@ This lab covers global content delivery using Front Door Standard in CDN mode �
 ---
 
 
-## **🛠️ Upcoming Labs
+## **🛠️ Upcoming Labs**
 
 
 ### Azure Front Door Rules Engine — Practical Scenarios
