@@ -1,1 +1,1 @@
-# Go out for a coffe its to eaaly for 2week
+# Go out for a coffee, it's too early for 2 weeks
