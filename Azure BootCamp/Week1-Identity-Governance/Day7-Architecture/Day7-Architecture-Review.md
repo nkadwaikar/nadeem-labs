@@ -1,29 +1,32 @@
-# Day 7 — Architecture & Portfolio Review
-### Based on Donovan Kelly — Chapters 5 & 6 + Architecture Guidance
+# Day 7 — Review + Practice (AZ‑104 Identity & Governance)
 
-## Objectives
-- Build identity governance architecture
-- Summarize the week
-- Prepare portfolio documentation
+## Chapters to Review
+- Chapter 9 — Practice Exams & Review
 
-## Reading (Book Alignment)
-- Chapter 5: Manage Azure governance  
-- Chapter 6: Monitor and maintain Azure resources  
-- Architecture guidance (appendix or final sections)
+## Domain 1 Topics to Revisit
+- ⬜ Azure AD identities
+- ⬜ RBAC scopes + inheritance
+- ⬜ PIM + Access Reviews
+- ⬜ Storage security + Private Endpoints
+- ⬜ Policy + Management Groups
+- ⬜ Governance hierarchy
 
-## Azure Portal Tasks
-1. Export architecture diagram  
-2. Review all resources  
-3. Clean up unused resources  
-4. Prepare GitHub Pages section  
+## Practice Questions
+- ⬜ Complete 20–30 AZ‑104 practice questions
+- ⬜ Mark incorrect answers
+- ⬜ Identify weak areas
 
-## Documentation (Screenshots + Notes)
-- Final architecture diagram  
-- Weekly summary  
-- Identity governance principles  
-- Portfolio notes  
+## Weak Areas Identified
+- Identity:
+- RBAC:
+- PIM:
+- Storage:
+- Policy:
+- Governance:
 
-## Key Learnings
-- Identity governance architecture  
-- Monitoring + policy integration  
-- Documentation best practices
+## Notes
+(Add your notes here)
+
+## Ready for Week 2?
+- ⬜ Yes  
+- ⬜ No  

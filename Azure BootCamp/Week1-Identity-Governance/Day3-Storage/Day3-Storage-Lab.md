@@ -1,32 +1,21 @@
-# Day 3 — Storage Security & Identity
-### Based on Donovan Kelly — Chapter 4: Implement and manage storage
+# Day 3 — Azure Storage (Replication, Access, Private Endpoints)
 
-## Objectives
-- Understand identity-based access to storage
-- Configure RBAC for storage
-- Explore SAS tokens and encryption
+## Chapters to Read
+- Chapter 7 — Manage Azure Storage
 
-## Reading (Book Alignment)
-- Chapter 4: Implement and manage storage  
-  - Storage accounts  
-  - Access control  
-  - Shared Access Signatures (SAS)  
-  - Encryption  
-  - RBAC for storage  
+## Learning Objectives
+- Understand storage replication (LRS/ZRS/GRS)
+- Configure secure access
+- Deploy Private Endpoints
+- Validate private connectivity
 
-## Azure Portal Tasks
-1. Create a storage account  
-2. Disable public access  
-3. Create a container  
-4. Assign RBAC roles (Storage Blob Data Reader)  
-5. Explore SAS token generation  
-
-## Documentation (Screenshots + Notes)
-- Storage account configuration  
-- Public access disabled  
-- RBAC assignment  
-- SAS token panel  
-
-## Key Learnings
-- RBAC vs SAS  
-- Storage security best practices
+## Lab Steps
+1. Create Storage Account
+2. Configure replication (ZRS or GRS)
+3. Disable public access
+4. Create Private Endpoint
+5. Link Private DNS Zone
+6. Test access from VM
+7. Validate DNS:
+   ```bash
+   nslookup <storageaccount>.blob.core.windows.net

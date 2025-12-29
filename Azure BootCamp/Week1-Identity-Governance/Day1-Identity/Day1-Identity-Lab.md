@@ -1,35 +1,22 @@
-# Day 1 — Identity Fundamentals (AZ‑104)
-### Based on Donovan Kelly — Chapter 1: Manage Azure Active Directory (Azure AD) identities
+# Day 1 — Identity Fundamentals (RBAC, Entra Roles, Managed Identities)
 
-## Objectives
-- Understand Azure AD identity types
-- Create and manage users and groups
-- Explore Azure AD roles and authentication concepts
+## Chapters to Read
+- Chapter 1 — Manage Azure AD Identities
+- Chapter 2 — Manage RBAC
 
-## Reading (Book Alignment)
-- Chapter 1: Manage Azure Active Directory identities  
-  - Users  
-  - Groups  
-  - Authentication  
-  - Azure AD roles  
-  - Identity types  
+## Learning Objectives
+- Understand Azure AD identity structure
+- Understand RBAC scopes and inheritance
+- Deploy and test Managed Identities
+- Validate access using Azure CLI
 
-## Azure Portal Tasks
-1. Create a test user  
-2. Create a security group  
-3. Add user to group  
-4. Assign Azure AD roles (e.g., User Administrator, Reader)  
-5. Explore Enterprise Applications  
-6. Explore Conditional Access (view only)
-
-## Documentation (Screenshots + Notes)
-- User creation screenshot  
-- Group creation screenshot  
-- Role assignment screenshot  
-- Notes on authentication methods  
-- Key takeaways
-
-## Key Learnings
-- Difference between identity types  
-- Authentication vs Authorization  
-- Role-based access control in Azure AD
+## Lab Steps
+1. Create Resource Group: `rg-identity-lab`
+2. Assign RBAC roles at different scopes (Subscription → RG → Resource)
+3. Deploy VM with System‑Assigned Managed Identity
+4. Create Storage Account
+5. Assign **Storage Blob Data Reader** to VM identity
+6. Validate access:
+   ```bash
+   az login --identity
+   az storage blob list --account-name <name> --container-name <container>

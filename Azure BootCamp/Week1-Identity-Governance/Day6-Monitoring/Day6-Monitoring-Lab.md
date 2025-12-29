@@ -1,31 +1,40 @@
-# Day 6 — Monitoring Identity & Governance
-### Based on Donovan Kelly — Chapter 6: Monitor and maintain Azure resources
+# Day 6 — Documentation Polish Checklist
 
-## Objectives
-- Understand identity monitoring
-- Review sign-in and audit logs
-- Explore Activity Log and Log Analytics
+## Markdown Cleanup
+- ⬜ Fix headings (H1 → H2 → H3)
+- ⬜ Ensure consistent spacing
+- ⬜ Add code blocks for commands
+- ⬜ Add bullet lists where needed
+- ⬜ Remove redundant text
 
-## Reading (Book Alignment)
-- Chapter 6: Monitor and maintain Azure resources  
-  - Azure AD sign-in logs  
-  - Audit logs  
-  - Activity logs  
-  - Log Analytics  
+## Diagrams
+- ⬜ Add architecture diagram to Day 5
+- ⬜ Add flow diagrams (optional) for:
+  - RBAC flow
+  - PIM activation flow
+  - Private Endpoint flow
 
-## Azure Portal Tasks
-1. View Azure AD sign-in logs  
-2. View audit logs  
-3. Explore Activity Log  
-4. Create Log Analytics workspace  
+## Validation Sections
+- ⬜ Add validation steps to each lab
+- ⬜ Add expected outputs
+- ⬜ Add screenshots (optional)
 
-## Documentation (Screenshots + Notes)
-- Sign-in logs  
-- Audit logs  
-- Activity Log  
-- Log Analytics workspace  
+## Troubleshooting Sections
+- ⬜ Add common errors
+- ⬜ Add fixes
+- ⬜ Add “root cause” notes
 
-## Key Learnings
-- Identity insights  
-- Monitoring patterns  
-- Common alerts
+## Architecture Relevance
+- ⬜ Add “Why this matters in real architecture”
+- ⬜ Add security implications
+- ⬜ Add governance implications
+
+## Folder Structure
+- ⬜ Ensure each day has its own folder
+- ⬜ Ensure filenames match plan
+- ⬜ Ensure diagram is saved as `diagram.png`
+
+## Final Review
+- ⬜ Check readability
+- ⬜ Check consistency
+- ⬜ Check professional tone

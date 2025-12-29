@@ -1,31 +1,32 @@
-# Day 5 — RBAC Deep Dive
-### Based on Donovan Kelly — Chapter 2: Manage access control (RBAC)
+# Day 5 — Full Identity + Governance Architecture Lab
 
-## Objectives
-- Understand RBAC hierarchy
-- Assign roles at different scopes
-- Explore IAM blade and inheritance
+## Chapters to Review
+- Chapter 1
+- Chapter 2
+- Chapter 3
+- Chapter 7
 
-## Reading (Book Alignment)
-- Chapter 2: Manage access control (RBAC)  
-  - Scopes  
-  - Inheritance  
-  - Built-in roles  
-  - Custom roles  
+## Learning Objectives
+- Combine identity, storage, and governance
+- Build an end‑to‑end architecture
+- Validate cross‑service interactions
 
-## Azure Portal Tasks
-1. Assign Reader at subscription level  
-2. Assign Contributor at resource group level  
-3. Explore IAM blade  
-4. Review access inheritance  
-5. View custom role JSON (read-only)  
+## Lab Steps
+1. Combine RBAC + Entra roles
+2. Combine PIM + Access Reviews
+3. Combine Storage + Private Endpoints
+4. Combine Policy + Management Groups
+5. Validate end‑to‑end flow
+6. Create architecture diagram (Draw.io)
 
-## Documentation (Screenshots + Notes)
-- IAM assignments  
-- Scope hierarchy diagram  
-- Notes on least privilege  
+## Validation
+- Identity → Storage access works
+- PIM → Role activation works
+- Policy → Compliance enforced
+- Private Endpoint → DNS resolves privately
 
-## Key Learnings
-- Scope-based access  
-- Role inheritance  
-- Custom role structure
+## Architecture Diagram
+Add file: `diagram.png`
+
+## Expected Outcome
+A complete, portfolio‑ready identity + governance architecture.
