@@ -93,7 +93,7 @@ Steps:
 - OS: Ubuntu Server 22.04 LTS  
 - Name: `vm-identity-lab`  
 - Resource Group: `rg-identity-lab`  
-- Region: Same as storage account  
+- Region: East US2  
 - Size: Standard_B1s  
 - Disk: Standard HDD  
 - Authentication: Password  
