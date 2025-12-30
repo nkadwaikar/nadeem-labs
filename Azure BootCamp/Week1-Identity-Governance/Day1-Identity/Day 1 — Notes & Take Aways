@@ -1,0 +1,48 @@
+### 1. Identity Hierarchy (Tenant → Directory → Subscription)
+- Microsoft Entra Tenant has a **1:1 mapping** with the Entra Directory.
+- The Directory stores **Users, Groups, Devices**, and acts as the identity database.
+- One Directory can be linked to **multiple Azure Subscriptions** (1:M mapping).
+- Subscriptions inherit identity and RBAC from the Directory.
+- Resource Groups and Resources sit under the subscription and follow RBAC inheritance.
+
+### 2. RBAC Scopes and Inheritance
+- RBAC hierarchy: **Subscription → Resource Group → Resource**.
+- Permissions flow **downward**, never upward.
+- Subscription-level roles apply to all RGs and resources.
+- RG-level roles apply only to resources inside that RG.
+- Resource-level roles enforce **least privilege** and override inherited permissions.
+
+### 3. Privileged Administrator Roles (High-Impact)
+These roles have broad, tenant-wide authority and must be tightly controlled.
+Examples:
+- **Global Administrator** — full control over the tenant.
+- **Privileged Role Administrator** — manages role assignments.
+- **User Access Administrator** — manages access to Azure resources.
+- **Security Administrator** — manages security settings.
+
+Key Findings:
+- These roles can modify identity, security, and governance settings.
+- They require MFA and should be activated through **PIM**.
+- Assign sparingly to reduce risk and maintain compliance.
+
+### 4. Job Function Roles (Operational, Least Privilege)
+These roles are task-specific and designed for day-to-day operations.
+Examples:
+- **Virtual Machine Contributor**
+- **Storage Account Contributor**
+- **Network Contributor**
+- **Website Contributor**
+
+Key Findings:
+- These roles support separation of duties.
+- They reduce blast radius by limiting access to specific resource types.
+- Ideal for DevOps, operations, and engineering teams.
+
+### 5. Managed Identity Access Pattern
+- System-assigned Managed Identity is created automatically with the VM.
+- It is used to authenticate to Azure services **without secrets**.
+- Assigning **Storage Blob Data Reader** at the resource level enables secure access.
+- Validation via:
+  ```bash
+  az login --identity
+  az storage blob list --account-name <name> --container-name <container>
