@@ -192,7 +192,7 @@ ssh azureuser@<public-ip-of-vm>
 azureuser@vm-identity-lab:~$.
 
 
-### 8.1 Connect to the VM
+## Connect to the VM
 
 Use SSH from Cloud Shell or your local terminal:
 
@@ -208,7 +208,7 @@ azureuser@vm-identity-lab:~$
 
 ---
 
-### 8.2 Install Azure CLI (Required on Ubuntu VMs)
+### 8.1 Install Azure CLI (Required on Ubuntu VMs)
 
 Ubuntu VMs do **not** include Azure CLI by default. Install it:
 
@@ -224,7 +224,7 @@ az version
 
 ---
 
-### 8.3 Authenticate Using the VM’s Managed Identity
+### 8.2 Authenticate Using the VM’s Managed Identity
 
 Run the following command **inside the VM**:
 
@@ -243,7 +243,7 @@ This confirms the VM authenticated using its **system‑assigned managed identit
 
 ---
 
-### 8.4 Access the Storage Account Using RBAC (No Keys)
+### 8.3 Access the Storage Account Using RBAC (No Keys)
 *This is the moment of truth — confirming that the VM’s system‑assigned managed identity can authenticate to Azure and read blob data **without** any keys, passwords, or secrets
 ```bash
 az storage blob list \
@@ -265,7 +265,7 @@ This confirms:
 
 ---
 
-### 8.5 Troubleshooting Managed Identity Access
+### 8.4 Troubleshooting Managed Identity Access
 
 #### **Issue: `az: command not found`**
 Azure CLI is not installed.
@@ -312,7 +312,7 @@ Fix: SSH into the VM and retry.
 
 ---
 
-### 8.6 Clean Up Resources (Recommended)
+### 8.5 Clean Up Resources (Recommended)
 
 Once you have completed the lab and validated managed identity access, delete the resource group to avoid unnecessary costs:
 
