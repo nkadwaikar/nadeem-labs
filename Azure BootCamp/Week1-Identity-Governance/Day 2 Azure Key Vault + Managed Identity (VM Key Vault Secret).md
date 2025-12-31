@@ -1,6 +1,22 @@
-# Day 2 — Azure Key Vault + Managed Identity (VM → Key Vault Secret)
+Here you go, Nadeem — a **cleaned, corrected, and properly formatted Markdown version** of your Day 2 file.  
+I fixed:
 
-> This lab continues from **Day 1**, using the same VM (`vm-identity-lab`) and Resource Group (`rg-identity-lab`).  
+- Heading hierarchy  
+- Spacing  
+- Code block formatting  
+- Horizontal rule consistency  
+- Section alignment  
+- List indentation  
+- Typography issues  
+
+This is now **portfolio‑ready**.
+
+---
+
+```markdown
+# Day 2 — Azure Key Vault + Managed Identity (Admin Identity + VM Workload Identity)
+
+> This lab continues from **Day 1**, using the same VM (`vm-bootcamp`) and Resource Group (`rg-bootcamp`).  
 > All user accounts use the placeholder domain `@contoso.com` to avoid exposing my real Azure AD tenant domain.  
 > Steps requiring IAM changes must be performed by a Global Administrator or User Access Administrator.
 
@@ -12,96 +28,276 @@
 
 ---
 
-## Learning Objectives
-- Deploy Azure Key Vault using RBAC authorization  
-- Create and manage secrets  
-- Assign Key Vault RBAC roles to a Managed Identity  
-- Authenticate to Key Vault from a VM **without secrets**  
-- Validate least‑privilege behavior  
-- Troubleshoot Key Vault access issues  
+## 1. Learning Objectives
+
+By the end of this combined Day 2 lab, you will:
+
+- Validate Azure CLI context (tenant + subscription + identity).
+- Confirm visibility of the lab Key Vault.
+- Understand how RBAC affects Key Vault data‑plane operations.
+- Create and read a secret using an **admin identity**.
+- Enable and validate a **system‑assigned managed identity** on a VM.
+- Assign least‑privilege RBAC roles for Key Vault access.
+- Retrieve a Key Vault secret using the **VM’s managed identity**.
+- Troubleshoot real-world `ForbiddenByRbac` and identity‑context issues.
+
+This completes the full Key Vault identity lifecycle.
 
 ---
 
-# Lab Steps
+## 2. Lab Setup and Assumptions
+
+**Resources:**
+
+- **Resource group:** `rg-bootcamp`
+- **Key Vault:** `kv-identity-lab1`
+- **Location:** `eastus`
+- **VM:** `vm-bootcamp` (Linux)
+- **Secret:** `db-password` (created during this lab)
+
+**Access model:**
+
+- Key Vault uses **Azure RBAC** (not access policies).
+- Admin identity has rights to manage RBAC.
+- VM will authenticate using its **system-assigned managed identity**.
 
 ---
 
-## 1. Create Key Vault (Admin)
+# Part 1 — Admin Identity → Key Vault
 
-### Configuration
-- **Name:** `kv-identity-lab`  
-- **Resource Group:** `rg-identity-lab`  
-- **Region:** Same as VM  
-- **SKU:** Standard  
-- **Soft Delete:** Enabled  
-- **Purge Protection:** Optional  
-- **Access Model:** **RBAC** (not Access Policies)
+## 3. Validate Azure CLI Context on the VM
 
-### Portal Steps
-1. Go to **Azure Portal**
-2. Search for **Key Vaults**
-3. Select **Create**
-4. Fill in:
-   - Resource Group: `rg-identity-lab`
-   - Key Vault Name: `kv-identity-lab`
-   - Region: Same as VM
-   - Pricing Tier: Standard
-5. Under **Access Configuration**, select:
-   - **Permission Model:** Azure RBAC
-6. Click **Review + Create → Create**
+All operations are run from **inside** the VM (`vm-bootcamp`).
 
----
-
-## 🔍 Key Vault Access Models — RBAC vs Access Policies
-
-| Feature | RBAC | Access Policies |
-|--------|------|-----------------|
-| Authorization Layer | Azure AD | Key Vault internal |
-| Granularity | High (role‑based) | Medium (permission‑based) |
-| Recommended | ✔ Yes | ✘ Legacy |
-| IAM Integration | Full | None |
-| Supports PIM | Yes | No |
-| Supports Deny Assignments | Yes | No |
-| Applies To | Management + Data plane | Data plane only |
-
----
-
-## 2. Add a Secret to Key Vault
-
-1. Open **kv-identity-lab**
-2. Left menu → **Secrets**
-3. Click **Generate/Import**
-4. Configure:
-   - **Name:** `db-password`
-   - **Value:** `P@ssw0rd123!`
-5. Click **Create**
-
----
-
-## 3. Assign Key Vault RBAC Role to the VM’s Managed Identity
-
-### Portal Steps
-1. Open **kv-identity-lab**
-2. Left menu → **Access Control (IAM)**
-3. Click **Add → Add role assignment**
-4. Select:
-   - **Role:** Key Vault Secrets User
-   - **Scope:** Key Vault
-   - **Assign access to:** Managed Identity
-5. Select:
-   - **Identity type:** Virtual Machine
-   - **Name:** `vm-identity-lab`
-6. Click **Save**
-
-### Expected Behavior
-- VM can **read** secrets  
-- VM cannot **write**, **delete**, or **list** all secrets  
-- Alex (Contributor) cannot read secrets  
-- Only admins can modify IAM  
-
----
-
-## 4. Connect to the VM
+### 3.1 Check current account context
 
 ```bash
-ssh -i <path-to-private-key> azureuser@<public-ip>
+az account show
+```
+
+Confirm:
+
+- `tenantId` matches the intended admin tenant.  
+- `id` (subscriptionId) matches the subscription hosting `rg-bootcamp`.  
+- `user.name` reflects your admin identity.  
+
+If incorrect:
+
+```bash
+az logout
+az login --tenant <ADMIN-TENANT-ID>
+```
+
+---
+
+## 4. Verify Key Vault Visibility
+
+```bash
+az keyvault list -o table
+```
+
+Expected output:
+
+```
+Location    Name              ResourceGroup
+----------  ----------------  ---------------
+eastus      kv-identity-lab1  rg-bootcamp
+```
+
+If empty → tenant/subscription mismatch.
+
+---
+
+## 5. First Attempt to Create a Secret (Expected Failure)
+
+```bash
+az keyvault secret set \
+  --vault-name kv-identity-lab1 \
+  --name db-password \
+  --value "P@ssw0rd123!"
+```
+
+Expected error:
+
+```
+ForbiddenByRbac
+Caller is not authorized to perform action
+Assignment: (not found)
+```
+
+### Interpretation
+
+- Authentication succeeded  
+- Key Vault exists  
+- **Authorization failed**  
+- Admin identity lacks Key Vault data‑plane RBAC  
+
+---
+
+## 6. Assign RBAC Permissions for the Admin Identity
+
+Azure Portal →  
+**Key Vault → kv-identity-lab1 → Access control (IAM)**
+
+Add role assignment:
+
+- **Role:** `Key Vault Secrets Officer`  
+- **Assign access to:** User  
+- **User:** admin@contoso.com  
+- **Scope:** This resource  
+
+Wait 30–60 seconds for RBAC propagation.
+
+---
+
+## 7. Successful Secret Creation
+
+```bash
+az keyvault secret set \
+  --vault-name kv-identity-lab1 \
+  --name db-password \
+  --value "P@ssw0rd123!"
+```
+
+Expected output includes:
+
+- `created` timestamp  
+- `id` of the secret  
+- `value` returned  
+
+---
+
+## 8. Validate Secret Retrieval (Admin Identity)
+
+```bash
+az keyvault secret show \
+  --vault-name kv-identity-lab1 \
+  --name db-password \
+  --query value -o tsv
+```
+
+Expected:
+
+```
+P@ssw0rd123!
+```
+
+Admin identity → Key Vault is now fully validated.
+
+---
+
+# Part 2 — VM Managed Identity → Key Vault
+
+## 9. Enable the VM’s Managed Identity
+
+Azure Portal →  
+**Virtual Machines → vm-bootcamp → Identity**
+
+- System assigned: **On**  
+- Save  
+
+Azure creates a service principal for the VM.
+
+---
+
+## 10. Assign Key Vault RBAC to the VM Identity
+
+Azure Portal →  
+**Key Vault → kv-identity-lab1 → Access control (IAM)**
+
+Add role assignment:
+
+- **Role:** `Key Vault Secrets User`  
+- **Assign access to:** Managed identity  
+- **Identity:** vm-bootcamp  
+- **Scope:** This resource  
+
+This grants **read-only** access to secrets.
+
+---
+
+## 11. Log In Using the VM’s Managed Identity
+
+SSH into the VM:
+
+```bash
+az login --identity --allow-no-subscriptions
+```
+
+Expected:
+
+```
+"user": {
+  "assignedIdentityInfo": "MSI",
+  "name": "systemAssignedIdentity",
+  "type": "servicePrincipal"
+}
+```
+
+This confirms Azure CLI is now acting **as the VM**.
+
+---
+
+## 12. Retrieve the Secret Using the VM Identity
+
+```bash
+az keyvault secret show \
+  --vault-name kv-identity-lab1 \
+  --name db-password \
+  --query value -o tsv
+```
+
+Expected:
+
+```
+P@ssw0rd123!
+```
+
+This validates:
+
+- VM identity authentication  
+- RBAC permissions  
+- Key Vault access  
+- Zero credentials used  
+
+This is the exact pattern used by production workloads.
+
+---
+
+# 13. Troubleshooting Notes
+
+### Issue  
+```
+ForbiddenByRbac
+Caller is not authorized
+```
+
+**Cause:** Missing RBAC assignment  
+**Fix:** Assign `Key Vault Secrets Officer` (admin) or `Key Vault Secrets User` (VM)
+
+---
+
+### Issue  
+```
+No access was configured for the managed identity
+```
+
+**Cause:** VM identity has no subscription-level roles  
+**Fix:**  
+
+```bash
+az login --identity --allow-no-subscriptions
+```
+
+---
+
+# 14. Completion Criteria
+
+You have completed Day 2 when:
+
+✔ Admin identity can create and read secrets  
+✔ VM identity is enabled  
+✔ VM identity has Key Vault Secrets User role  
+✔ `az login --identity` succeeds  
+✔ VM retrieves `db-password` successfully  
+✔ No credentials or secrets were stored anywhere  
