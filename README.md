@@ -38,7 +38,6 @@ Each week includes:
 
 ----
 
-```markdown
 ## 📚 Quick Links
 
 - **Week 1:** [Identity, RBAC, Managed Identity](./Azure%20BootCamp/Week1-Identity-Governance/)
