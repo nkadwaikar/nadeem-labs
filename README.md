@@ -36,51 +36,20 @@ Each week includes:
 - Validation steps  
 - A full Bicep deployment
 
----
+----
 
-## 📚 Navigation
+```markdown
+## 📚 Quick Links
 
-<details>
-<summary><strong>🧭 Boot Camp Roadmap</strong></summary>
-
-- [Week 1 — Identity, RBAC, Managed Identity](./Azure%20BootCamp/Week1-Identity-Governance/)
-- [Week 2 — Networking & Security](./Azure%20BootCamp/Week2-Networking-Security/)
-- [Week 3 — Compute, App Services & Storage](./Azure%20BootCamp/Week3-Compute-Storage/)
-- [Week 4 — Monitoring, Backup & Governance](./Azure%20BootCamp/Week4-Monitoring-Governance/)
-
-</details>
-
-<details>
-<summary><strong>🏗️ Weekly Capstones</strong></summary>
-
-Each week ends with a real‑world architecture scenario deployed with Bicep.  
-These capstones are standalone portfolio pieces.
-
-- [Week 1 Capstone — Secure Workload Identity Architecture](./Azure%20BootCamp/Week1-Identity-Governance/capstone/)
-- [Week 2 Capstone — Zero‑Trust Network Architecture](./Azure%20BootCamp/Week2-Networking-Security/capstone/)
-- [Week 3 Capstone — Scalable Compute & App Service Architecture](./Azure%20BootCamp/Week3-Compute-Storage/capstone/)
-- [Week 4 Capstone — Monitoring & Backup Baseline](./Azure%20BootCamp/Week4-Monitoring-Governance/capstone/)
-
-</details>
-
-<details>
-<summary><strong>🧪 Featured Labs</strong></summary>
-
-- [Static Website on Azure Storage](./labs/Azure%20Front%20Door-Static%20Website%20Hosting%20Lab.md#azure-storage-static-website)
-- [Azure Front Door — Routing](./labs/Azure%20Front%20Door-Static%20Website%20Hosting%20Lab.md#azure-front-door--routing--global-delivery)
-- [Azure Front Door — Global Delivery](./labs/Azure%20Front%20Door-Static%20Website%20Hosting%20Lab.md#modern-cdn-delivery-front-door-standard)
-
-</details>
-
-<details>
-<summary><strong>🛠️ Upcoming Labs</strong></summary>
-
-- [Front Door Rules Engine](./labs/frontdoor-rules/)
-- [Front Door Premium + Private Link](./labs/frontdoor-premium/)
-
-</details>
+- **Week 1:** [Identity, RBAC, Managed Identity](./Azure%20BootCamp/Week1-Identity-Governance/)
+- **Week 2:** [Networking & Security](./Azure%20BootCamp/Week2-Networking-Security/)
+- **Week 3:** [Compute, App Services & Storage](./Azure%20BootCamp/Week3-Compute-Storage/)
+- **Week 4:** [Monitoring, Backup & Governance](./Azure%20BootCamp/Week4-Monitoring-Governance/)
 
 ---
+```
+
+This keeps navigation minimal without the verbose collapsible sections, letting the structured roadmap and featured labs sections below do the work.
 
 ### ✅ Completed Days
 
