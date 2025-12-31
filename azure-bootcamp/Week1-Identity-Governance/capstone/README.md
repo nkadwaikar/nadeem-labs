@@ -13,6 +13,22 @@ This is a production‑grade pattern used across modern Azure workloads.
 
 ---
 
+## ⏱️ Estimated Time
+30–45 minutes (including deployment and validation)
+
+---
+
+## 📋 Prerequisites
+
+Before starting, ensure you have:
+
+- **Azure CLI** installed ([download](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli))
+- **Bicep CLI** installed (`az bicep install`)
+- An **Azure subscription** with Contributor or Owner role
+- **jq** (optional, for JSON parsing in validation)
+
+---
+
 ## 🎯 Capstone Objectives
 
 By completing this capstone, you will:
@@ -40,19 +56,22 @@ This pattern eliminates secrets entirely — the VM authenticates using Azure AD
 
 ---
 
-## 📂 Capstone Folder
+## 📂 Capstone Files
 
-capstone folder includes the core files needed to deploy and validate the architecture:
+The capstone folder includes the core files needed to deploy and validate the architecture:
 
-- **architecture-diagram.drawio** — high‑level identity flow  
-- **main.bicep** — deploys the full environment  
-- **validation.md** — CLI + REST API validation steps  
+- **[architecture-diagram.drawio](./architecture-diagram.drawio)** — high‑level identity flow diagram
+- **[main.bicep](./main.bicep)** — deploys the full environment (VM, Key Vault, Storage Account)
+- **[validation.md](./validation.md)** — step‑by‑step CLI and REST API validation commands
 
 ---
 
 ## 🚀 Deployment Steps (High‑Level)
 
 1. **Deploy the environment using Bicep**  
+   ```bash
+   az deployment group create --resource-group <rg-name> --template-file main.bicep
+   ```
    - VM with Managed Identity  
    - Key Vault (RBAC mode)  
    - Storage Account + container  
@@ -73,15 +92,26 @@ capstone folder includes the core files needed to deploy and validate the archit
 
 ---
 
+## ⚠️ Common Issues & Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| RBAC role not taking effect | Wait 2–3 minutes for role propagation |
+| "Not authorized to perform action" | Verify role assignment scope matches resource |
+| Bicep deployment fails | Check Azure CLI version: `az version` |
+| Key Vault access denied | Ensure VM's managed identity is assigned the correct role |
+
+---
+
 ## 🔍 Validation Checklist
 
-From the VM:
+From the VM, verify:
 
-- Can the VM retrieve a Key Vault secret?  
-- Can the VM read a blob from Storage?  
-- Are no secrets stored on the VM?  
-- Are RBAC roles scoped correctly?  
-- Does the Bicep deployment output expected values?  
+- ✅ Can the VM retrieve a Key Vault secret? (`az keyvault secret show --name app-secret`)  
+- ✅ Can the VM read a blob from Storage? (Download via SAS or OAuth)  
+- ✅ Are no secrets stored on the VM?  
+- ✅ Are RBAC roles scoped correctly? (`az role assignment list --scope <resource-id>`)  
+- ✅ Does the Bicep deployment output expected values?  
 
 If all answers are **yes**, your identity architecture is working.
 
