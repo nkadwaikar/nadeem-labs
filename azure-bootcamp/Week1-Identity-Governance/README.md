@@ -38,11 +38,11 @@ This week includes seven hands‑on labs that build on each other. **Estimated t
 |-----|-------|----------|-----------|
 | **Day 1** | RBAC + Managed Identity + Storage | 1.5h | [`Day1-RBAC-MI-Storage/`](./Day1-RBAC-MI-Storage/) |
 | **Day 2** | Azure Key Vault + Managed Identity | 1.5h | [`Day2-KeyVault-MI/`](./Day2-KeyVault-MI/) |
-| **Day 3** | Managed Identity → Storage (Blob Read Access) | 1.5h | [`Day3-MI-Storage-Access/`](./Day3-MI-Storage-Access/) |
-| **Day 4** | RBAC Scopes Deep Dive | 1.5h | [`Day4-RBAC-Scopes/`](./Day4-RBAC-Scopes/) |
-| **Day 5** | Azure AD Basics (Users, Groups, Roles) | 1.5h | [`Day5-AzureAD-Basics/`](./Day5-AzureAD-Basics/) |
-| **Day 6** | Access Control Validation (Portal + CLI) | 1.5h | [`Day6-Access-Validation/`](./Day6-Access-Validation/) |
-| **Day 7** | Bicep Deployment: Identity + Key Vault + Storage | 2h | [`Day7-Bicep-Deployment/`](./Day7-Bicep-Deployment/) |
+| **Day 3** | Managed Identity → Storage (Blob Read Access) | 1.5h | Pending |
+| **Day 4** | RBAC Scopes Deep Dive | 1.5h | Pending |
+| **Day 5** | Azure AD Basics (Users, Groups, Roles) | 1.5h | Pending |
+| **Day 6** | Access Control Validation (Portal + CLI) | 1.5h | Pending |
+| **Day 7** | Bicep Deployment: Identity + Key Vault + Storage | 2h | Pending |
 
 **Each lab includes:** step‑by‑step instructions, validation steps, notes, and CLI/Portal walkthroughs.
 
