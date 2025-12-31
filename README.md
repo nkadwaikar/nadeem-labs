@@ -24,7 +24,7 @@ Every lab is written to be clear, repeatable, and production‑ready — the kin
 
 A high‑level view of the Boot Camp structure:
 
-- **Week 1:** Identity, RBAC, Managed Identity  
+- **Week 1:** [Identity, RBAC, Managed Identity](./Week1-Identity-Governance/) 
 - **Week 2:** Networking & Security  
 - **Week 3:** Compute, App Services & Storage  
 - **Week 4:** Monitoring, Backup & Governance  
@@ -38,22 +38,10 @@ Each week includes:
 
 ----
 
-## 📚 Quick Links
-
-- **Week 1:** [Identity, RBAC, Managed Identity](./Azure%20BootCamp/Week1-Identity-Governance/)
-- **Week 2:** [Networking & Security](./Azure%20BootCamp/Week2-Networking-Security/)
-- **Week 3:** [Compute, App Services & Storage](./Azure%20BootCamp/Week3-Compute-Storage/)
-- **Week 4:** [Monitoring, Backup & Governance](./Azure%20BootCamp/Week4-Monitoring-Governance/)
-
----
-
-
-This keeps navigation minimal without the verbose collapsible sections, letting the structured roadmap and featured labs sections below do the work.
-
 ### ✅ Completed Days
 
-- **Day 1:** RBAC, Managed Identity, Storage Access (Completed)  
-- **Day 2:** Key Vault + Managed Identity (Completed)  
+- **Day 1:** [RBAC, Managed Identity, Storage Access](./Week1-Identity-Governance/01-rbac-basics.md) (Completed)
+- **Day 2:** [Key Vault + Managed Identity](./Week1-Identity-Governance/02-keyvault-managed-identity.md) (Completed)
 - **Day 3:** Managed Identity → Storage Account (Blob Read Access)
 
 This list grows as I progress through the Boot Camp.
@@ -71,14 +59,8 @@ This list grows as I progress through the Boot Camp.
 ---
 
 ## 📘 Featured Labs
-
-### **1. Azure Storage Static Website**
-A lightweight, no‑nonsense walkthrough for hosting a static site in Azure Storage.  
-Fast to deploy, easy to maintain, and ideal for simple web workloads.
-
 ---
-
-### **2. Azure Front Door — Routing & Global Delivery**
+### **Azure Front Door — Routing & Global Delivery**
 A two‑part guide covering both routing and global content delivery for static websites:
 
 **• Static Website Routing**  
@@ -87,6 +69,8 @@ How to connect Azure Front Door to a static website and validate routing end‑t
 **• Modern CDN Delivery (Front Door Standard)**  
 Azure CDN is retired for new deployments, and Front Door Standard now provides the modern CDN experience.  
 This section covers global delivery, caching behavior, edge nodes, and the small quirks that make global distribution both powerful and occasionally humbling.
+
+📖 **[View Full Lab →](./labs/Azure%20Front%20Door-Static%20Website%20Hosting%20Lab.md)**
 
 ---
 
