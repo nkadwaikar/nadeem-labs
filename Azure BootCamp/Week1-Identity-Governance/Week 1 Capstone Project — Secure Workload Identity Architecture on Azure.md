@@ -1,37 +1,25 @@
-
 # Week 1 Capstone Project — Secure Workload Identity Architecture on Azure
 *Boot Camp: Identity, RBAC & Managed Identity — Week 1*
 
-> This capstone project consolidates all identity concepts from Week 1:
-> - Azure AD identities  
-> - RBAC  
-> - Key Vault  
-> - Managed Identities  
-> - Storage Account (RBAC mode)  
-> - Identity-based access (CLI + REST)  
->
-> The goal is to build a **real-world, production-grade identity architecture** where a VM-based workload securely retrieves secrets and configuration files without storing credentials.
+> This capstone consolidates all identity concepts from Week 1 into a single, real‑world architecture.  
+> The goal is to build a secure, credential‑free identity flow where a VM‑based workload retrieves secrets and configuration files using Managed Identity, RBAC, Key Vault, and Storage.
 
 ---
 
 # 1. Scenario Overview
 
-A development team is deploying an application on a VM.  
-The application needs to:
+A development team is deploying an application on a virtual machine.  
+The application must:
 
-- Retrieve a database password from **Azure Key Vault**
-- Read a configuration file from **Azure Storage**
-- Use **no secrets, no keys, no connection strings**
+- Retrieve a **database password** from Azure Key Vault  
+- Read a **configuration file** from Azure Storage  
+- Use **no secrets, no access keys, no connection strings**  
+- Follow **least‑privilege RBAC**  
+- Use **Managed Identity** for authentication  
 
-Your task is to design and implement a **secure, identity-based architecture** using:
+Your task is to design and implement a **secure workload identity architecture** that meets these requirements.
 
-- Azure AD  
-- RBAC  
-- Managed Identity  
-- Key Vault  
-- Storage Account  
-
-This is a real-world pattern used across enterprise Azure environments.
+This pattern is used across enterprise Azure environments and is a core AZ‑104 skill.
 
 ---
 
@@ -65,29 +53,44 @@ This is a real-world pattern used across enterprise Azure environments.
 
 By completing this capstone, you will:
 
-- Build a secure identity architecture using Azure AD + RBAC  
-- Configure Key Vault for RBAC-based secret access  
-- Configure Storage Account for identity-based blob access  
-- Enable and validate VM Managed Identity  
-- Assign least-privilege RBAC roles  
+### Identity & RBAC
+- Configure Azure AD identities and RBAC roles  
+- Apply least‑privilege access at resource and container scopes  
+
+### Key Vault
+- Deploy Key Vault in **RBAC mode**  
+- Store and retrieve secrets using Managed Identity  
+
+### Storage Account
+- Deploy a Storage Account with a **private container**  
+- Upload configuration files  
+- Grant identity‑based blob access  
+
+### Managed Identity
+- Enable system‑assigned MI on a VM  
+- Authenticate to Azure CLI using MI  
+- Access Key Vault and Storage without credentials  
+
+### Validation
 - Validate access using:
   - Azure CLI (`--auth-mode login`)
   - REST API (OAuth token → Storage)  
-- Produce a **portfolio-ready architecture document**  
-- (Day 7) Deploy the entire environment using **Bicep**
+
+### IaC (Day 7)
+- Deploy the entire architecture using **Bicep**  
 
 ---
 
-# 4. Deliverables 
+# 4. Deliverables (Portfolio-Ready)
 
 Your final capstone submission includes:
 
 ### **A. Architecture Document**
 - Overview  
-- Diagram  
 - Identity flow  
-- RBAC assignments  
+- RBAC matrix  
 - Security considerations  
+- Diagram  
 
 ### **B. Hands-On Implementation**
 - Key Vault (RBAC mode)  
@@ -114,50 +117,86 @@ A single Bicep deployment that creates:
 - RBAC assignments  
 - Container + sample blob (optional)
 
-This becomes a **GitHub portfolio artifact**.
-
 ---
 
 # 5. Step-by-Step Implementation
 
-This capstone reuses the validated steps from Days 1–3.
+This capstone reuses validated steps from Days 1–3.
 
-### **Step 1 — Create Key Vault (Portal)**  
+---
+
+## Step 1 — Create Key Vault (Portal)
+
 - RBAC mode  
 - Soft delete + purge protection enabled  
+- Add secret: `db-password`  
 
-### **Step 2 — Create Storage Account (Portal)**  
+---
+
+## Step 2 — Create Storage Account (Portal)
+
 - Standard LRS  
-- Private container `app-data`  
+- Private container: `app-data`  
+- Upload blob: `config.json`  
 
-### **Step 3 — Upload Test Artifacts**
-- Secret: `db-password`  
-- Blob: `config.json`  
+---
 
-### **Step 4 — Enable VM Managed Identity**
-- System-assigned MI → On  
+## Step 3 — Enable VM Managed Identity
 
-### **Step 5 — Assign RBAC Roles**
+VM → Identity → System-assigned → **On**
+
+---
+
+## Step 4 — Assign RBAC Roles
+
 | Resource | Role | Identity |
 |----------|------|----------|
 | Key Vault | Key Vault Secrets Officer | admin@contoso.com |
 | Key Vault | Key Vault Secrets User | vm-bootcamp |
 | Storage Account | Storage Blob Data Reader | vm-bootcamp |
 
-### **Step 6 — Validate Access from VM**
-- `az login --identity`  
-- Retrieve secret  
-- Download blob  
-- REST API validation  
+---
 
-### **Step 7 — Bicep Deployment (Day 7)**
-Deploy the entire architecture declaratively.
+## Step 5 — Validate Access from VM
+
+### Login using MI
+```bash
+az login --identity --allow-no-subscriptions
+```
+
+### Retrieve secret
+```bash
+az keyvault secret show \
+  --vault-name kv-bootcamp \
+  --name db-password
+```
+
+### Download blob
+```bash
+az storage blob download \
+  --account-name stidentitylab01 \
+  --container-name app-data \
+  --name config.json \
+  --file downloaded.json \
+  --auth-mode login
+```
+
+### REST API validation
+```bash
+TOKEN=$(curl -H "Metadata: true" \
+  "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://storage.azure.com/" \
+  | jq -r '.access_token')
+
+curl -H "Authorization: Bearer $TOKEN" \
+     -H "x-ms-version: 2021-08-06" \
+     "https://stidentitylab01.blob.core.windows.net/app-data/config.json"
+```
 
 ---
 
 # 6. Validation Checklist
 
-You have successfully completed the Week 1 Capstone when:
+You have completed the Week 1 Capstone when:
 
 ✔ VM retrieves Key Vault secret using MI  
 ✔ VM downloads blob using MI  
@@ -170,7 +209,7 @@ You have successfully completed the Week 1 Capstone when:
 
 ---
 
-# 7. Security Considerations (Real-World)
+# 7. Security Considerations
 
 - No secrets stored on VM  
 - No access keys used  
@@ -193,4 +232,3 @@ Your Week 1 Capstone includes:
 - **CLI validation**  
 - **REST API validation**  
 - **Bicep deployment (Day 7)**  
-
