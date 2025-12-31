@@ -249,7 +249,7 @@ This is the exact pattern used by production workloads.
 
 --
 
-## 10. Clean Up Resources (Recommended)
+## 13. Clean Up Resources (Recommended)
 
 Once you have completed the lab, delete the resource group to avoid unnecessary costs:
 
@@ -261,7 +261,7 @@ az group delete \
 
 ---
 
-# 13. Troubleshooting Notes
+# 14. Troubleshooting Notes
 
 ### Issue  
 ```
@@ -289,7 +289,7 @@ az login --identity --allow-no-subscriptions
 ---
 
 
-# 14. Completion Criteria
+# 15. Completion Criteria
 
 You have completed Day 2 when:
 
