@@ -1,4 +1,8 @@
-# Day 1 — Notes & Key Takeaways
+# 📌 Placeholder — Day 1 & Day 2 Notes / Key Takeaways  
+*(This section will be expanded as the Boot Camp progresses.)*
+
+---
+
 ## Day 1 — Notes & Key Takeaways
 
 ### 1. Identity Hierarchy (Tenant → Directory → Subscription)
@@ -95,7 +99,7 @@ az storage blob list \
 ### 2. Managed Identity + Key Vault Integration
 
 - VM's system-assigned identity authenticates without secrets.
-- Role required: **Key Vault Secrets User**.
+- Required role: **Key Vault Secrets User**.
 - Identity must be assigned at the **Key Vault scope**.
 - No need for Access Policies, SAS tokens, or client secrets.
 
@@ -108,9 +112,9 @@ az storage blob list \
 - VM identity can **read** secrets but cannot write/delete.
 - Contributor (Alex) can see the Key Vault resource but **cannot** read secrets.
 - IAM actions require:
-  - User Access Administrator
-  - Owner
-  - Global Administrator
+  - User Access Administrator  
+  - Owner  
+  - Global Administrator  
 
 **Takeaway:** Key Vault enforces strict separation between **control-plane** and **data-plane** permissions.
 
@@ -129,10 +133,10 @@ az storage blob list \
 
 ### 5. Common Troubleshooting Patterns
 
-- **Forbidden:** Missing RBAC role
-- **VaultNotFound:** Wrong vault name or region
-- **Identity mismatch:** Running `az login --identity` in Cloud Shell
-- **Firewall issues:** Key Vault network restrictions enabled
+- **Forbidden:** Missing RBAC role  
+- **VaultNotFound:** Wrong vault name or region  
+- **Identity mismatch:** Running `az login --identity` in Cloud Shell  
+- **Firewall issues:** Key Vault network restrictions enabled  
 
 **Takeaway:** Most Key Vault issues fall into identity, RBAC, or networking categories.
 
