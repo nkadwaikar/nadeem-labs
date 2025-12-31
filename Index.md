@@ -19,7 +19,7 @@ Each lab is written to be clear, repeatable, and production‑ready.
 ### ✅ Completed Days
 - **Day 1:** RBAC, Managed Identity, Storage Access (Completed)
 - **Day 2:** Key Vault + Managed Identity  (Completed)
-- **Day 3:** Networking, Storage Security, Monitoring (Planned)
+- **Day 3:** Managed Identity → Storage Account (Blob Read Access)
 
 ### 📅 What This Boot Camp Includes
 - Daily hands‑on labs  
