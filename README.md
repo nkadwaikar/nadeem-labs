@@ -40,10 +40,6 @@ Each week includes:
 
 ## 📚 Navigation
 
-### 🏗️ Weekly Real‑World Capstone Projects  
-Each week ends with a real‑world architecture scenario deployed with Bicep.  
-These capstones are standalone portfolio pieces.
-
 <details>
 <summary><strong>🧭 Boot Camp Roadmap</strong></summary>
 
@@ -57,10 +53,15 @@ These capstones are standalone portfolio pieces.
 <details>
 <summary><strong>🏗️ Weekly Capstones</strong></summary>
 
+Each week ends with a real‑world architecture scenario deployed with Bicep.  
+These capstones are standalone portfolio pieces.
+
 - [Week 1 Capstone — Secure Workload Identity Architecture](./Azure%20BootCamp/Week1-Identity-Governance/capstone/)
 - [Week 2 Capstone — Zero‑Trust Network Architecture](./Azure%20BootCamp/Week2-Networking-Security/capstone/)
 - [Week 3 Capstone — Scalable Compute & App Service Architecture](./Azure%20BootCamp/Week3-Compute-Storage/capstone/)
 - [Week 4 Capstone — Monitoring & Backup Baseline](./Azure%20BootCamp/Week4-Monitoring-Governance/capstone/)
+
+</details>
 
 <details>
 <summary><strong>🧪 Featured Labs</strong></summary>
@@ -70,6 +71,7 @@ These capstones are standalone portfolio pieces.
 - [Azure Front Door — Global Delivery](./labs/Azure%20Front%20Door-Static%20Website%20Hosting%20Lab.md#modern-cdn-delivery-front-door-standard)
 
 </details>
+
 <details>
 <summary><strong>🛠️ Upcoming Labs</strong></summary>
 
