@@ -247,8 +247,7 @@ This validates:
 
 This is the exact pattern used by production workloads.
 
---
-
+---
 ## 13. Clean Up Resources (Recommended)
 
 Once you have completed the lab, delete the resource group to avoid unnecessary costs:
