@@ -47,7 +47,7 @@ Each week includes:
 - **Week 4:** [Monitoring, Backup & Governance](./Azure%20BootCamp/Week4-Monitoring-Governance/)
 
 ---
-```
+
 
 This keeps navigation minimal without the verbose collapsible sections, letting the structured roadmap and featured labs sections below do the work.
 
