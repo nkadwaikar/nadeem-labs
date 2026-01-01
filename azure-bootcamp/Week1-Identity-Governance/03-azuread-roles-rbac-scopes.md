@@ -165,4 +165,4 @@ These nuances reflect real enterprise identity governance and are essential for 
 ## 🔗 Related Labs
 
 - [Day 1 — RBAC Basics](01-rbac-basics.md)
-- [Day 2-keyvault-managed-identity][02-keyvault-managed-identity.md]
+- [Day 2 — Key Vault + Managed Identity](02-keyvault-managed-identity.md)
