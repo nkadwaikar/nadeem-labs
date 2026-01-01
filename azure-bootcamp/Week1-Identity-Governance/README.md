@@ -1,10 +1,10 @@
-# 📘 Week 1 - Identity, RBAC & Managed Identity  
-### *Identity-first. Portal-first. Coffee-powered.*
+# 📘 Week 1 — Identity, RBAC & Managed Identity  
+### *Identity-first. Secure-by-default. Architect-ready.*
 
-Week 1 lays the foundation for everything that follows.  
-Azure identity is where access, automation, and security all begin — so this week focuses on RBAC, Managed Identity, Key Vault, and secure access patterns that real workloads rely on.
+Week 1 establishes the foundation for all Azure workloads.  
+Identity is where access, automation, and security begin — so this week focuses on RBAC, Managed Identity, Key Vault, and the identity-driven patterns used in modern cloud environments.
 
-Every lab is written to be clear, repeatable, and friendly enough that even a low‑caffeine version of me can follow it.
+Each lab is designed to be clear, repeatable, and aligned with real-world Azure architecture practices.
 
 ---
 
@@ -12,55 +12,64 @@ Every lab is written to be clear, repeatable, and friendly enough that even a lo
 
 Before starting Week 1, ensure you have:
 
-- **Azure Subscription** (with Contributor or Owner role)
-- **Azure CLI** installed ([install guide](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli))
+- **Azure Subscription** (Contributor or Owner access)
+- **Azure CLI** installed  
+  👉 https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 - **Bicep CLI** (`az bicep install`)
-- Basic understanding of Azure Portal navigation
+- Basic familiarity with Azure Portal navigation
 
 ---
 
 ## 🎯 What You'll Learn This Week
 
-- How Azure AD, RBAC, and role assignments actually work  
+- How Azure AD (Entra ID), RBAC, and role assignments work  
 - How to enable and use **system-assigned managed identities**  
 - How workloads authenticate to **Key Vault** and **Storage** without secrets  
 - How to validate access using the **Portal**, **CLI**, and **REST API**  
-- How to structure identity-first architectures that scale  
-- How to deploy the entire environment using **Bicep**
+- How to design identity-first architectures that scale  
+- How to deploy identity components using **Bicep**  
+- How to think like an architect when designing secure access flows  
 
 ---
 
-## 🧪 Hands‑On Labs
+## 🧪 Hands-On Labs (Week 1)
 
-This week includes seven hands‑on labs that build on each other. **Estimated time: 8–10 hours total (~1.5 hours per day).**
+This week includes seven hands-on labs that build on each other.  
+**Estimated time: 8–10 hours total (~1.5 hours per day).**
 
-| Day | Topic | Duration | Lab Files |
-|-----|-------|----------|-----------|
-| **Day 1** | RBAC + Managed Identity + Storage | 1.5h | [01-rbac-basics.md](./01-rbac-basics.md) |
-| **Day 2** | Azure Key Vault + Managed Identity | 1.5h | [02-keyvault-managed-identity.md](./02-keyvault-managed-identity.md) |
-| **Day 3** | Managed Identity to Storage (Blob Read Access) | 1.5h | Pending |
-| **Day 4** | RBAC Scopes Deep Dive | 1.5h | Pending |
-| **Day 5** | Azure AD Basics (Users, Groups, Roles) | 1.5h | Pending |
-| **Day 6** | Access Control Validation (Portal + CLI) | 1.5h | Pending |
-| **Day 7** | Bicep Deployment: Identity + Key Vault + Storage | 2h | Pending |
+| Day | Topic | Duration | Lab File |
+|-----|--------|----------|----------|
+| **Day 1** | Identity Fundamentals + RBAC Basics | 1.5h | [01-identity-rbac-basics.md](./labs/01-identity-rbac-basics.md) |
+| **Day 2** | Managed Identity + Key Vault | 1.5h | [02-managed-identity-keyvault.md](./labs/02-managed-identity-keyvault.md) |
+| **Day 3** | Azure AD Roles + RBAC Scopes | 1.5h | [03-azuread-roles-rbac-scopes.md](./labs/03-azuread-roles-rbac-scopes.md) |
+| **Day 4** | Azure Locks + Resource Policies | 1.5h | [04-locks-resource-policies.md](./labs/04-locks-resource-policies.md) |
+| **Day 5** | Access Validation (Portal + CLI) | 1.5h | [05-access-validation.md](./labs/05-access-validation.md) |
+| **Day 6** | Bicep Deployment — Identity Stack | 1.5h | [06-bicep-identity-stack.md](./labs/06-bicep-identity-stack.md) |
+| **Day 7** | Capstone Build — Identity-First Architecture | 2h | [Capstone README](./capstone/README.md) |
 
-**Each lab includes:** step‑by‑step instructions, validation steps, notes, and CLI/Portal walkthroughs.
+Each lab includes step-by-step instructions, validation steps, troubleshooting patterns, and CLI/Portal walkthroughs.
 
 ---
 
-## 🏗️ Week 1 Capstone — Secure Workload Identity Architecture
+## 🏗️ Week 1 Capstone — Identity-First Secure Workload Architecture
 
-A real‑world scenario where a VM retrieves:
+A real-world scenario where a VM retrieves:
 
-- Secrets from Key Vault  
-- Config files from Storage  
+- Secrets from **Key Vault**  
+- Configuration files from **Storage**  
 
-...using **Managed Identity**, **RBAC**, and **zero secrets**.
+…using **Managed Identity**, **RBAC**, and **zero secrets**.
 
-**Prerequisites:** Complete Days 1–7 (or have prior knowledge of RBAC + Managed Identity).
+This capstone demonstrates:
+
+- Identity-based authentication  
+- Least-privilege RBAC  
+- Secure workload design  
+- Modular Bicep deployment  
+- End-to-end validation  
 
 📁 **Capstone folder:**  
-[Week 1 Capstone — Secure Workload Identity Architecture](./capstone/)
+[./capstone/](./capstone/)
 
 Includes:
 
@@ -74,9 +83,8 @@ Includes:
 
 ## 🧹 Cleanup & Cost Management
 
-⚠️ **Important:** Delete all resources after completing labs to avoid unexpected Azure charges.
+⚠️ **Important:** Delete all resources after completing labs to avoid unnecessary Azure charges.
 
-Cleanup all resources with:
 ```powershell
 az group delete --name <resource-group-name> --yes
 ```
@@ -85,5 +93,7 @@ az group delete --name <resource-group-name> --yes
 
 ## ☕ Week 1 Summary
 
-By the end of Week 1, you'll understand how Azure identity actually works — not just in theory, but in the way real workloads authenticate and access resources.  
-This week sets the tone for the entire Boot Camp: clean, secure, identity‑first cloud engineering.
+By the end of Week 1, you will understand how Azure identity works in practice — not just conceptually, but through real workloads that authenticate and access resources securely.
+
+This week sets the tone for the entire Boot Camp:  
+**clean, secure, identity-first cloud engineering.**

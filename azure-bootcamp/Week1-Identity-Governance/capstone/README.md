@@ -1,167 +1,208 @@
-# 🏗️ Week 1 Capstone — Secure Workload Identity Architecture  
-### *Zero secrets. Full control. Identity‑first.* ☕
+# 🏗️ Capstone — Identity‑First Secure Workload Architecture  
+### *Zero secrets. Zero trust. Enterprise‑grade identity design.*
 
-This capstone brings together everything learned in Week 1.  
-You will build a **production-grade identity architecture** where a VM securely retrieves:
+> **📌 Portfolio Status:** Work in Progress | Last Updated: December 2025
 
-- Secrets from **Azure Key Vault**  
-- Configuration files from **Azure Storage**  
+This capstone demonstrates how to build a **secure, identity‑driven workload** in Azure using:
 
-…using **Managed Identity**, **RBAC**, and **zero stored credentials**.
+- Managed Identity  
+- Azure Key Vault  
+- Azure Storage  
+- RBAC (Role‑Based Access Control)  
+- Bicep (Infrastructure as Code)  
+- Identity governance best practices  
 
-This pattern is widely used in modern Azure workloads.
-
----
-
-## ⏱️ Estimated Time
-30–45 minutes (including deployment and validation)  
-> ☕ Pro tip: keep a cup of coffee nearby — watching RBAC and token flows is oddly satisfying.
+This architecture reflects modern cloud security patterns used across enterprise environments.
 
 ---
 
-## 📋 Prerequisites
-
-Before starting, ensure you have:
-
-- **Azure CLI** installed ([download](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli))  
-- **Bicep CLI** installed (`az bicep install`)  
-- An **Azure subscription** with Contributor or Owner role  
-- **jq** (optional, for JSON parsing in validation)  
-
----
-
-## 🎯 Capstone Objectives
+## 🎯 Objectives
 
 By completing this capstone, you will:
 
-- Deploy a VM with a **system-assigned managed identity**  
-- Configure **Key Vault (RBAC mode)** for secret retrieval  
-- Configure **Storage Account** for blob access  
-- Assign **least-privilege RBAC roles** at the correct scopes  
-- Validate access using **Azure CLI** and **OAuth tokens**  
-- Deploy the entire environment using **Bicep**
+- Deploy a VM with a **system‑assigned Managed Identity**
+- Securely access **Key Vault** and **Storage** without secrets
+- Implement **least‑privilege RBAC** at correct scopes
+- Enforce **zero‑trust identity patterns**
+- Deploy the entire environment using **modular Bicep**
+- Validate identity flows using **CLI + REST API**
+- Document design decisions like an Azure Architect
+
+This capstone directly supports **AZ‑104, AZ‑305, and AZ‑500** certification skills.
 
 ---
 
 ## 🧱 Architecture Overview
 
-The architecture includes:
+The workload uses identity‑based authentication end‑to‑end:
 
-- **Virtual Machine** with system-assigned Managed Identity  
-- **Key Vault (RBAC mode)** storing secrets  
-- **Storage Account** with a private container  
-- **RBAC assignments** for Key Vault + Storage  
-- **Bicep deployment** for full automation  
-
-> This pattern eliminates secrets entirely — the VM authenticates using Azure AD tokens.
-
----
-
-## 📐 Architecture Diagram Conventions
-
-- **Blue boxes:** Compute / VMs  
-- **Green boxes:** Identity services (Key Vault, Managed Identity)  
-- **Yellow boxes:** Storage or data endpoints  
-- **Arrows:** Data / authorization flow  
-
-**Diagram file:** [architecture-diagram.drawio](./architecture-diagram.drawio)
-
----
-
-## 📂 Capstone Files
-
-- **[main.bicep](./main.bicep)** — deploys the full environment (VM, Key Vault, Storage Account)  
-- **[validation.md](./validation.md)** — step-by-step CLI and REST API validation commands  
-
----
-
-## 🚀 Deployment Steps
-
-### 1. Deploy the environment using Bicep
-
-```bash
-az deployment group create --resource-group <rg-name> --template-file main.bicep
+```
+VM (Managed Identity)
+        │
+        ▼
+Azure AD → Issues OAuth token
+        │
+        ├── Key Vault (Secrets)
+        └── Storage Account (Blob)
 ```
 
-This will deploy:
-
-- Virtual Machine with system-assigned Managed Identity
-- Key Vault in RBAC mode
-- Storage Account with a private container
-
-### 2. Assign RBAC roles
-
-- Key Vault Secrets User → VM managed identity
-- Storage Blob Data Reader → VM managed identity
-
-### 3. Add a secret to Key Vault
-
-```bash
-az keyvault secret set --vault-name <keyvault-name> --name "app-secret" --value "mySuperSecretValue"
-```
-
-### 4. Upload a config file to Storage
-
-```bash
-az storage blob upload --account-name <storage-account> --container-name <container-name> --name "appsettings.json" --file ./appsettings.json
-```
-
-### 5. Validate access from the VM
-
-SSH into the VM and retrieve the secret:
-
-```bash
-az vm run-command invoke --resource-group <rg-name> --name <vm-name> --command-id RunShellScript --scripts "az keyvault secret show --vault-name <keyvault-name> --name app-secret"
-```
-
-Download the blob using OAuth token:
-
-```bash
-az storage blob download --container-name <container-name> --name "appsettings.json" --file ./downloaded-appsettings.json --auth-mode login --account-name <storage-account>
-```
-
-> ☕ Optional: sip a coffee while your tokens flow — it's oddly satisfying to see RBAC in action.
+No secrets. No connection strings. No SAS tokens.
 
 ---
 
-## ⚠️ Common Issues & Troubleshooting
+## 📂 Repository Structure
 
-| Issue                              | Solution                                                  |
-| ---------------------------------- | --------------------------------------------------------- |
-| RBAC role not taking effect        | Wait 2–3 minutes for role propagation                     |
-| "Not authorized to perform action" | Verify role assignment scope matches resource             |
-| Bicep deployment fails             | Check Azure CLI version: `az version`                     |
-| Key Vault access denied            | Ensure VM's managed identity is assigned the correct role |
+```
+capstone/
+├── README.md
+├── architecture/                          🚧 Work in Progress
+│   ├── identity-architecture.drawio
+│   └── identity-architecture.png
+├── bicep/                                 🚧 Work in Progress
+│   ├── main.bicep
+│   └── modules/
+│       ├── vm.bicep
+│       ├── keyvault.bicep
+│       ├── storage.bicep
+│       └── identity.bicep
+├── validation/                            🚧 Work in Progress
+│   ├── cli-validation.md
+│   ├── portal-validation.md
+│   └── troubleshooting.md
+└── docs/                                  🚧 Work in Progress
+    └── security-controls.md
+```
 
----
-
-## 🔍 Validation Checklist
-
-From the VM, verify:
-
-- ✅ Can the VM retrieve a Key Vault secret? (`az keyvault secret show --name app-secret`)
-- ✅ Can the VM read a blob from Storage? (Download via SAS or OAuth)
-- ✅ Are no secrets stored on the VM?
-- ✅ Are RBAC roles scoped correctly? (`az role assignment list --scope <resource-id>`)
-- ✅ Does the Bicep deployment output expected values?
-
-> ☕ Optional: Validate with a coffee in hand — seeing tokens work feels rewarding.
-
----
-
-## 🎓 AZ-104 Skills Practiced
-
-- **Implement and manage Azure identities and governance** (RBAC, Managed Identity)
-- **Implement and manage storage** (Blob access, least-privilege roles)
-- **Monitor and troubleshoot Azure resources** (validation via CLI & tokens)
-- **Deploy infrastructure using Bicep** (IaC)
+Each folder is designed for clarity, auditability, and professional presentation.
 
 ---
 
-## 📝 Capstone Summary
+## 🚀 Deployment Workflow
 
-This capstone demonstrates a core Azure pattern:
+### **1. Deploy Core Resources (Bicep)** 🚧 Work in Progress
+- Resource group  
+- Virtual machine  
+- Managed identity  
+- Key Vault (RBAC mode)  
+- Storage account  
 
-> **Workloads authenticate using Managed Identity, not secrets.**
+### **2. Assign RBAC Roles**  
+- VM → Key Vault Secrets User  
+- VM → Storage Blob Data Reader  
 
-You now have a **secure, repeatable identity architecture** suitable for real-world environments — and a strong portfolio piece to show your expertise.
+### **3. Upload Test Data**  
+- `app-secret` → Key Vault  
+- `settings.json` → Storage  
+
+### **4. Validate Identity Flows** 🚧 Work in Progress
+- `az login --identity`  
+- Retrieve Key Vault secret  
+- Download blob using OAuth token  
+
+---
+
+## 🔍 Validation Steps
+
+> **🚧 Work in Progress** - Validation scripts coming soon
+
+Validation scripts will be located in:
+
+```
+validation/cli-validation.md
+validation/portal-validation.md
+validation/troubleshooting.md
+```
+
+Will include:
+
+- Token inspection  
+- RBAC verification  
+- Access tests  
+- Error simulation  
+- Troubleshooting patterns  
+
+---
+
+## 🔐 Security Controls
+
+> **🚧 Work in Progress** - Security documentation coming soon
+
+Will be documented in:
+
+```
+docs/security-controls.md
+```
+
+Will include:
+
+- Zero Trust alignment  
+- RBAC least privilege  
+- Key Vault hardening  
+- Storage network restrictions  
+- Identity lifecycle considerations  
+
+---
+
+## 🧠 Why This Capstone Matters
+
+This project demonstrates the **core identity patterns** used in modern cloud environments:
+
+- Identity‑based authentication  
+- Secretless workloads  
+- RBAC governance  
+- Modular IaC  
+- Secure workload design  
+
+It proves you understand:
+
+- Identity  
+- Security  
+- Governance  
+- IaC  
+- Architecture  
+
+This is a foundational project for a strong Azure portfolio.
+
+---
+
+## 📌 Completion Checklist
+
+Progress tracking:
+
+- 🚧 VM identity is enabled  
+- 🚧 Key Vault is deployed in RBAC mode  
+- 🚧 Storage account is deployed  
+- 🚧 RBAC roles are assigned correctly  
+- 🚧 VM retrieves Key Vault secret  
+- 🚧 VM reads blob data using OAuth  
+- 🚧 No secrets or keys were used  
+- 🚧 Bicep deployment is modular and reusable  
+- 🚧 Architecture diagram is included  
+
+**Legend:** ✅ Complete | 🚧 In Progress | ⏳ Planned
+
+---
+
+## 🎯 Project Roadmap
+
+### Phase 1: Foundation (Current)
+- 🚧 Define architecture
+- 🚧 Create Bicep modules
+- ⏳ Deploy core resources
+
+### Phase 2: Security & Validation
+- ⏳ Implement RBAC
+- ⏳ Create validation scripts
+- ⏳ Document security controls
+
+### Phase 3: Documentation
+- ⏳ Architecture diagrams
+- ⏳ Troubleshooting guides
+- ⏳ Final polish
+
+---
+
+## ▶️ Next Capstone
+
+**Capstone 2 — Secure Hub‑Spoke Network Architecture** ⏳ Planned  
+(Week 2 Networking & Security)
