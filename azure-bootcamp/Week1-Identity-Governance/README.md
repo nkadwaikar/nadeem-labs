@@ -39,14 +39,14 @@ This week includes seven hands-on labs that build on each other.
 
 
 | Day | Topic | Duration | Lab File |
-|-----|--------|----------|----------|
-| **Day 1** | Identity Fundamentals + RBAC Basics | 1.5h | [01-identity-rbac-basics.md](./01-identity-rbac-basics.md) |
-| **Day 2** | Managed Identity + Key Vault | 1.5h | [02-managed-identity-keyvault.md](./02-managed-identity-keyvault.md) |
+|-----|-------|----------|----------|
+| **Day 1** | Identity Fundamentals + RBAC Basics | 1.5h | [01-rbac-basics.md](./01-rbac-basics.md) |
+| **Day 2** | Managed Identity + Key Vault | 1.5h | [02-keyvault-managed-identity.md](./02-keyvault-managed-identity.md) |
 | **Day 3** | Azure AD Roles + RBAC Scopes | 1.5h | [03-azuread-roles-rbac-scopes.md](./03-azuread-roles-rbac-scopes.md) |
 | **Day 4** | Azure Locks + Resource Policies | 1.5h | [04-locks-resource-policies.md](./04-locks-resource-policies.md) |
 | **Day 5** | Access Validation (Portal + CLI) | 1.5h | [05-access-validation.md](./05-access-validation.md) |
 | **Day 6** | Bicep Deployment — Identity Stack | 1.5h | [06-bicep-identity-stack.md](./06-bicep-identity-stack.md) |
-| **Day 7** | Capstone Build — Identity-First Architecture | 2h | [07-capstone-README.md](./07-capstone-README.md) |
+| **Day 7** | Capstone Build — Identity-First Architecture | 2h | [07-capstone-identity-architecture.md](./07-capstone-identity-architecture.md) |
 
 Each lab includes step-by-step instructions, validation steps, troubleshooting patterns, and CLI/Portal walkthroughs.
 
