@@ -1,15 +1,14 @@
-This lab focuses on **Azure AD roles vs RBAC roles**, **scope boundaries**, and **how identity permissions differ between control‑plane and data‑plane operations** — a critical concept for AZ‑104, AZ‑305, and AZ‑500.
+# **Day 3 — Microsoft Entra ID Roles + RBAC Scopes (Hands‑On Lab)**  
+### *Directory roles vs resource roles. Control plane vs data plane. Identity clarity unlocked.*
 
-# Day 3 — Azure AD Roles + RBAC Scopes (Control Plane vs Data Plane)
-
-> This lab builds on Day 1 and Day 2.  
-> All user accounts use the placeholder domain `@contoso.com` to avoid exposing my real Azure AD tenant domain.  
+> This lab builds on Day 1 (RBAC Basics) and Day 2 (Managed Identity + Key Vault).  
+> All user accounts use the placeholder domain `@contoso.com` to avoid exposing my real Microsoft Entra ID tenant domain.  
 > Steps requiring IAM changes must be performed by an administrator with elevated privileges.
 
 ---
 
 ## 📚 Chapters to Read
-- **Chapter 5 — Manage Azure AD Roles**  
+- **Chapter 5 — Manage Microsoft Entra ID Roles**  
 - **Chapter 6 — Understand RBAC Scopes**  
 - **Chapter 7 — Control Plane vs Data Plane Permissions**
 
@@ -19,12 +18,11 @@ This lab focuses on **Azure AD roles vs RBAC roles**, **scope boundaries**, and 
 
 By the end of this lab, you will:
 
-- Understand the difference between **Azure AD roles** and **Azure RBAC roles**
-- Understand **control‑plane** vs **data‑plane** authorization
-- Assign Azure AD directory roles to a user
-- Assign RBAC roles at different scopes
-- Validate how permissions differ across scopes
-- Observe real‑world least‑privilege behavior
+- Understand the difference between **Microsoft Entra ID roles** and **Azure RBAC roles**
+- Assign directory roles and resource roles to different users
+- Validate permissions from the user's perspective
+- Understand control‑plane vs data‑plane access
+- Observe least‑privilege behavior in real time
 
 This is one of the most important identity concepts in Azure.
 
@@ -34,73 +32,23 @@ This is one of the most important identity concepts in Azure.
 
 ---
 
-## 1. Identity Concepts Overview
+## **1. Create a Second Test User (Admin)**
 
-Azure has **two separate permission systems**:
-
----
-
-### 🔹 **Azure AD Roles (Directory Roles)**  
-These control **identity management**:
-
-- User management  
-- Group management  
-- App registrations  
-- Enterprise apps  
-- Conditional Access  
-- MFA settings  
-
-Examples:
-
-- Global Administrator  
-- User Administrator  
-- Security Administrator  
-- Application Administrator  
-
-**Scope:** Tenant-wide (directory level)  
-**Not inherited** into subscriptions or resources.
-
----
-
-### 🔹 **Azure RBAC Roles (Resource Roles)**  
-These control **Azure resource access**:
-
-- VMs  
-- Storage  
-- Key Vault  
-- Networking  
-- Resource groups  
-- Subscriptions  
-
-Examples:
-
-- Owner  
-- Contributor  
-- Reader  
-- Storage Blob Data Reader  
-- Key Vault Secrets User  
-
-**Scope:** Subscription → Resource Group → Resource  
-**Inherited downward**.
-
----
-
-## 2. Create a Second Test User (Admin)
-
-This user will be used to test Azure AD roles.
+This user will test Microsoft Entra ID directory roles.
 
 - **User principal name:** `emma.lee@contoso.com`  
 - **Display name:** Emma Lee  
 - **Role:** No admin roles  
 
+This keeps the test clean and predictable.
+
 ---
 
-## 3. Assign an Azure AD Role (Directory Role)
+## **2. Assign a Microsoft Entra ID Role (Directory Role)**
 
 Assign Emma the **User Administrator** role.
 
-Azure Portal →  
-**Azure Active Directory → Roles and administrators → User Administrator**
+**Azure Portal → Microsoft Entra ID → Roles and administrators → User Administrator**
 
 Add assignment:
 
@@ -125,18 +73,18 @@ This demonstrates the separation between **identity management** and **resource 
 
 ---
 
-## 4. Validate Azure AD Role Permissions (Login as Emma)
+## **3. Validate Microsoft Entra ID Role Permissions (Login as Emma)**
 
 Sign in as: `emma.lee@contoso.com`
 
-### Validate Allowed Actions
+### ✔ Allowed Actions
 
-1. Go to **Azure Active Directory → Users**
+1. Go to **Microsoft Entra ID → Users**
 2. Create a new user (e.g., `test.user@contoso.com`)
 3. Reset a password
 4. Add user to a group
 
-### Validate Denied Actions
+### ❌ Denied Actions
 
 Try to:
 
@@ -150,12 +98,11 @@ Expected:
 
 ---
 
-## 5. Assign RBAC Role to Emma (Admin)
+## **4. Assign RBAC Role to Emma (Admin)**
 
 Assign Emma **Reader** at the subscription scope.
 
-Azure Portal →  
-**Subscriptions → Access Control (IAM) → Add role assignment**
+**Azure Portal → Subscriptions → Access Control (IAM) → Add role assignment**
 
 - **Role:** Reader  
 - **Scope:** Subscription  
@@ -179,23 +126,23 @@ Emma still **cannot**:
 
 ---
 
-## 6. Compare Emma vs Alex (From Day 1)
+## **5. Compare Emma vs Alex (From Day 1)**
 
-| User | Azure AD Role | RBAC Role | What They Can Do |
+| User | Microsoft Entra ID Role | RBAC Role | What They Can Do |
 |------|----------------|-----------|------------------|
 | **Alex** | None | Contributor (RG) | Full control inside `rg-bootcamp` |
 | **Emma** | User Administrator | Reader (Subscription) | Manage users, view resources only |
 
 ### Key Insight
 
-- Azure AD roles do **not** grant resource access  
+- Microsoft Entra ID roles do **not** grant resource access  
 - RBAC roles do **not** grant directory access  
 
 They are **completely separate permission systems**.
 
 ---
 
-## 7. Control Plane vs Data Plane (Key Concept)
+## **6. Control Plane vs Data Plane (Hands‑On)**
 
 ### 🔹 Control Plane  
 Managing Azure resources:
@@ -206,8 +153,6 @@ Managing Azure resources:
 - Modify networking  
 
 Controlled by **Azure RBAC**.
-
----
 
 ### 🔹 Data Plane  
 Accessing the data inside a resource:
@@ -222,17 +167,18 @@ Controlled by **resource‑specific roles**, such as:
 - Key Vault Secrets User  
 - Cosmos DB Reader  
 
-### Example
+### Hands‑On Validation
 
-Emma (Reader) can **see** the Key Vault but **cannot** read secrets.  
-Alex (Contributor) can **manage** the Key Vault but **cannot** read secrets.  
-VM identity (Key Vault Secrets User) **can** read secrets.
+1. Emma opens the Key Vault → **Allowed** (control plane: Reader)  
+2. Emma tries to read a secret → **Denied** (data plane: no role)  
+3. VM identity reads the secret → **Allowed** (Key Vault Secrets User)  
+4. Alex (Contributor) tries to read the secret → **Denied** (Contributor ≠ data‑plane access)
 
-This is intentional and secure.
+This is exactly how Azure enforces **zero trust**.
 
 ---
 
-## 8. Troubleshooting Scenarios
+## **7. Troubleshooting Scenarios**
 
 ### Scenario 1  
 User can see a resource but cannot modify it.  
@@ -250,12 +196,12 @@ User can manage Key Vault but cannot read secrets.
 
 ### Scenario 3  
 User can manage users but cannot access resources.  
-**Cause:** Azure AD role only  
+**Cause:** Microsoft Entra ID role only  
 **Fix:** Assign RBAC role
 
 ---
 
-## 9. Clean Up (Optional)
+## **8. Clean Up (Optional)**
 
 ```bash
 az role assignment delete --assignee emma.lee@contoso.com --role Reader
@@ -263,11 +209,11 @@ az role assignment delete --assignee emma.lee@contoso.com --role Reader
 
 ---
 
-## 📌 Day 3 Summary
+## 📌 **Day 3 Summary**
 
 Today you learned:
 
-- The difference between **Azure AD roles** and **Azure RBAC roles**
+- The difference between **Microsoft Entra ID roles** and **Azure RBAC roles**
 - How directory roles affect identity management
 - How RBAC roles affect resource access
 - How scope inheritance works
@@ -281,5 +227,11 @@ This knowledge is essential for real‑world cloud architecture and all three ce
 ## ▶️ Next Lab
 
 **Day 4 — Azure Locks + Resource Policies**  
-`04-locks-resource-policies.md`
-```
+See: [04-locks-resource-policies.md](04-locks-resource-policies.md)
+
+---
+
+## 🔗 Related Labs
+
+- [Day 1 — RBAC Basics](01-rbac-basics.md)
+- [Day 2 — Managed Identity + Key Vault](02-managed-identity-keyvault.md)

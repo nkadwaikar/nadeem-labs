@@ -41,7 +41,7 @@ This week includes seven hands-on labs that build on each other.
 |-----|--------|----------|----------|
 | **Day 1** | Identity Fundamentals + RBAC Basics | 1.5h | [01-identity-rbac-basics.md](./labs/01-identity-rbac-basics.md) |
 | **Day 2** | Managed Identity + Key Vault | 1.5h | [02-managed-identity-keyvault.md](./labs/02-managed-identity-keyvault.md) |
-| **Day 3** | Azure AD Roles + RBAC Scopes | 1.5h | [03-azuread-roles-rbac-scopes.md](./labs/03-azuread-roles-rbac-scopes.md) |
+| **Day 3** | Azure AD Roles + RBAC Scopes | 1.5h | [03-azuread-roles-rbac-scopes.md](./labs/03-azuread-roles-rbac-scopes) |
 | **Day 4** | Azure Locks + Resource Policies | 1.5h | [04-locks-resource-policies.md](./labs/04-locks-resource-policies.md) |
 | **Day 5** | Access Validation (Portal + CLI) | 1.5h | [05-access-validation.md](./labs/05-access-validation.md) |
 | **Day 6** | Bicep Deployment — Identity Stack | 1.5h | [06-bicep-identity-stack.md](./labs/06-bicep-identity-stack.md) |

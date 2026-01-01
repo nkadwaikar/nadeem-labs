@@ -326,7 +326,8 @@ az group delete \
 
 ## 📌 Day 2 Summary
 
-### Key Concepts Learned
+
+Today you learned:
 
 ✅ **System-assigned managed identities** provide automatic identity management for Azure resources  
 ✅ **Azure Key Vault with RBAC** offers centralized secret management with granular access control  
@@ -334,30 +335,14 @@ az group delete \
 ✅ **Secretless authentication** eliminates the need to store credentials in code or configuration  
 ✅ **OAuth token-based authentication** enables secure service-to-service communication  
 
-### Skills Acquired
-
-- Deploying VMs with managed identities
-- Creating and configuring Azure Key Vault
-- Implementing RBAC-based access control
-- Authenticating from Azure resources using managed identities
-- Retrieving secrets programmatically without credentials
-
-This is the **foundational identity pattern** used in modern cloud-native workloads and represents Azure's recommended approach for securing access to resources.
-
 ---
 
 ## ▶️ Next Lab
 
 **Day 3 — Azure AD Roles + RBAC Scopes**  
-Continue to `03-azuread-roles-rbac-scopes.md`
+Continue to [03-azuread-roles-rbac-scopes.md](03-azuread-roles-rbac-scopes.md)
 
----
 
-## 📚 Additional Resources
+## 🔗 Related Labs
 
-- [Azure Managed Identities Documentation](https://learn.microsoft.com/azure/active-directory/managed-identities-azure-resources/)
-- [Azure Key Vault Best Practices](https://learn.microsoft.com/azure/key-vault/general/best-practices)
-- [Azure RBAC Documentation](https://learn.microsoft.com/azure/role-based-access-control/)
-
-**🎓 Nadeem Labs | Azure Security BootCamp**  
-Week 1 — Identity & Governance
+- [Day 1 — RBAC Basics](01-rbac-basics.md)

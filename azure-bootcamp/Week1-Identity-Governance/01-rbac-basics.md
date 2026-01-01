@@ -429,16 +429,6 @@ Today you learned:
 - ✅ How to assign roles using **Azure Portal** and **Azure CLI**
 - ✅ How **least-privilege access** is enforced through scoping
 - ✅ How to **validate and troubleshoot** RBAC assignments
-
-### Key Takeaways
-
-1. **Scope matters:** Always assign roles at the most restrictive scope necessary
-2. **Inheritance flows down:** Permissions at a higher scope apply to all child scopes
-3. **Contributor ≠ Owner:** Contributor can manage resources but not IAM
-4. **Propagation takes time:** Wait 3–5 minutes for role assignments to take effect
-
-This foundation prepares you for **Day 2**, where you'll enable **Managed Identity** and secure access to **Azure Key Vault** without using passwords or connection strings.
-
 ---
 
 ## ▶️ Next Lab
@@ -446,23 +436,3 @@ This foundation prepares you for **Day 2**, where you'll enable **Managed Identi
 Continue to **Day 2 — Managed Identity + Key Vault**  
 📖 [02-managed-identity-keyvault.md](./02-managed-identity-keyvault.md)
 
-### What You'll Learn in Day 2
-
-- Enable **system-assigned managed identity** on an Azure VM
-- Access **Key Vault secrets** without storing credentials in code
-- Understand **Azure AD authentication** vs credential-based authentication
-- Build on the RBAC concepts learned today
-
----
-
-## 📚 Additional Resources
-
-- [Azure RBAC documentation](https://learn.microsoft.com/azure/role-based-access-control/)
-- [Azure built-in roles](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles)
-- [Best practices for Azure RBAC](https://learn.microsoft.com/azure/role-based-access-control/best-practices)
-- [Troubleshoot Azure RBAC](https://learn.microsoft.com/azure/role-based-access-control/troubleshooting)
-
----
-
-**🎓 Nadeem Labs | Azure Security BootCamp**  
-Week 1 — Identity & Governance
