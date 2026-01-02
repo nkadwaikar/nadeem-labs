@@ -334,6 +334,3 @@ Optional but helpful:
 
 - **Day 3 — Identity-First VM Deployment**  
   `03-identity-first-vm.md`
-
-- **Day 4 — Azure Locks + Resource Policies**  
-  `04-locks-resource-policies.md`
