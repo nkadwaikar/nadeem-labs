@@ -1,188 +1,170 @@
-<!-- filepath: vscode-vfs://github/nkadwaikar/nadeem-labs/azure-bootcamp/Week1-Identity-Governance/04-locks-resource-policies.md -->
 # **Day 4 — Azure Locks + Resource Policies (Hands-On Lab)**  
 ### *Protect resources from accidental deletion and enforce governance at scale.*
 
-> This lab builds on Days 1–3 and introduces two major governance controls:  
-> **Resource Locks** (Delete/Read-only) and **Azure Policy** (compliance enforcement).  
-> These are essential for real-world cloud governance and AZ-104/AZ-500/AZ-305.
+Day 4 introduces two foundational governance controls used in every enterprise Landing Zone:  
+**Resource Locks** (Delete / Read‑only) and **Azure Policy** (Deny / Audit / Modify).  
+These controls enforce consistency, prevent accidental changes, and shape compliant deployments.
 
 ---
 
-## 📚 Chapters to Read
-- **Chapter 8 — Azure Resource Locks**  
-- **Chapter 9 — Azure Policy & Compliance**  
+## 📚 **Chapters to Read**
+- Chapter 8 — Azure Resource Locks  
+- Chapter 9 — Azure Policy & Compliance  
 
 ---
 
-## 🎯 Learning Objectives
+## 🎯 **Learning Objectives**
 
-By the end of this lab, you will:
+You will learn to:
 
-- Apply **Delete** and **Read-only** locks at different scopes  
-- Understand lock inheritance  
-- Test how locks affect RBAC permissions  
-- Deploy and assign Azure Policies  
-- Validate compliance and remediation  
-- Understand how governance interacts with identity and RBAC  
+- Apply **Delete** and **Read‑only** locks  
+- Understand **lock inheritance**  
+- Assign **custom and built‑in Azure Policies**  
+- Enforce **tagging** and **SKU restrictions**  
+- Validate compliance  
+- Compare behavior between **policy‑restricted** and **policy‑free** resource groups  
 
 ---
 
-# 🧪 Lab Steps
+# 🧪 **Lab Steps**
 
 ---
 
 ## **1. Create a Test Resource Group**
 
-If you already have `rg-bootcamp`, you can reuse it.  
-Otherwise:
-
 **Azure Portal → Resource groups → Create**
 
-- **Name:** `rg-locks-demo`  
-- **Region:** your preferred region  
+- Name: `rg-locks-demo`  
+- Region: any  
 
 ---
 
 ## **2. Apply a Delete Lock at Resource Group Scope**
 
-**Azure Portal → Resource groups → rg-locks-demo → Settings → Locks → Add**
+**rg-locks-demo → Settings → Locks → Add**
 
-- **Lock name:** `rg-delete-lock`  
-- **Lock type:** Delete  
-- **Notes:** Prevent accidental deletion  
+- Lock name: `rg-delete-lock`  
+- Lock type: Delete  
 
-Click **OK** to apply.
-
-### ✔ Expected Behavior
-
-- You **cannot delete** the resource group  
-- You **cannot delete** any resource inside it  
-- You **can still modify** resources  
-
-This is the most common lock used in production.
+### Expected Behavior
+- RG cannot be deleted  
+- Resources inside cannot be deleted  
+- Resources **can still be modified**  
 
 ---
 
 ## **3. Test the Delete Lock**
 
-Try to delete the resource group:
-
-**Resource group → Overview → Delete resource group**
-
-Expected:
-
-> "Cannot delete resource group because a lock is in place."
-
-Try to delete a resource inside the RG (e.g., a VM or storage account).
-
-Expected:
-
-> "Cannot delete resource because a lock is in place."
+Try deleting the RG → blocked  
+Try deleting a resource → blocked  
 
 ---
 
-## **4. Apply a Read-Only Lock at Resource Scope**
+## **4. Remove the Delete Lock (Important)**
 
-Pick any resource inside the RG (e.g., a storage account).
+To test Read‑only behavior correctly:
 
-**Storage account → Settings → Locks → Add**
-
-- **Lock name:** `sa-readonly-lock`  
-- **Lock type:** Read-only  
-
-Click **OK** to apply.
-
-### ✔ Expected Behavior
-
-- You **cannot modify** the resource  
-- You **cannot delete** the resource  
-- You **can view** all settings  
-- You **can read** data (if RBAC allows it)  
+**rg-locks-demo → Locks → Delete**
 
 ---
 
-## **5. Test the Read-Only Lock**
+## **5. Apply a Read‑Only Lock at Resource Scope**
 
-Try to:
+Choose any resource (e.g., storage account):
 
-- Change configuration  
-- Add tags  
-- Modify networking  
-- Update access keys  
-- Change SKU  
+**Storage account → Locks → Add**
 
-Expected:
+- Lock name: `sa-readonly-lock`  
+- Lock type: Read‑only  
 
-> "The resource is locked and cannot be modified."
+### Expected Behavior
+- Cannot modify  
+- Cannot delete  
+- Can view settings  
+- Can read data (if RBAC allows)  
 
 ---
 
-## **6. Remove the Read-Only Lock**
+## **6. Remove the Read‑Only Lock**
 
-**Storage account → Settings → Locks → Select the lock → Delete**
-
-Confirm deletion.
-
-This restores normal behavior.
+**Storage account → Locks → Delete**
 
 ---
 
 # **Azure Policy Section**
 
-Now let's enforce governance at scale.
+---
+
+## **7. Assign a Custom Policy — Audit Resource Groups Missing a Tag**
+
+Azure does **not** provide a built‑in policy that enforces tags specifically on resource groups.  
+Therefore, we created a custom Audit policy.
+
+### **Custom Policy JSON (Sanitized)**
+
+```json
+{
+  "properties": {
+    "displayName": "Custom Policy — Audit Resource Groups Missing a Tag",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Audits resource groups that do not contain a required tag.",
+    "metadata": {
+      "category": "Governance",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the tag to audit for."
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": false
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}
+```
+
+### **Assign the Custom Policy**
+
+**Azure Portal → Policy → Definitions → Select your custom policy → Assign**
+
+- Scope: Subscription  
+- Assignment name: `audit-missing-environment-tag`  
+- Parameter:  
+  - Tag Name: `environment`  
+
+### Expected Behavior
+- No deployments are blocked  
+- RGs missing the tag appear as **Non‑compliant**  
+- RGs with the tag appear as **Compliant**  
 
 ---
 
-## **7. Assign a Built-In Azure Policy**
+## **8. Test the Custom Policy**
 
-We'll use a simple, common policy:
+Create:
 
-**"Require tags on resource groups"**
-
-**Azure Portal → Policy → Definitions → Search: "Require tag"**
-
-Choose:
-
-- **Policy:** *Require a tag on resource groups*  
-
-**Click Assign:**
-
-- **Scope:** Select your subscription  
-- **Basics:**
-  - **Assignment name:** `require-environment-tag`
-  - **Description:** Enforce environment tag on all RGs
-- **Parameters:**
-  - **Tag name:** `environment`  
-- **Remediation:** Leave as default
-- **Review + create** → **Create**
-
----
-
-## **8. Test the Policy**
-
-Try to create a new resource group **without** the `environment` tag.
-
-**Resource groups → Create:**
-- **Name:** `rg-test-noncompliant`
-- **Region:** your region
-- **Tags:** (leave empty)
-- Click **Review + create**
-
-Expected:
-
-> "Resource group creation failed due to policy violation."
-
-Now try again **with** the tag:
-
-**Resource groups → Create:**
-- **Name:** `rg-test-compliant`
-- **Region:** your region
-- **Tags:** `environment = dev`
-- Click **Review + create** → **Create**
-
-Expected:
-
-✔ Resource group creation succeeds.
+- `rg-test-noncompliant` → no tag → **Non‑compliant**  
+- `rg-test-compliant` → tag `environment=dev` → **Compliant**  
 
 ---
 
@@ -190,100 +172,168 @@ Expected:
 
 **Azure Portal → Policy → Compliance**
 
-Find your assignment: `require-environment-tag`
-
-- It should show **non-compliant** for any RG missing the tag  
-- It should show **compliant** for RGs with the tag  
-
-Note: Compliance scan may take 5-10 minutes to update.
+Audit policies provide visibility without enforcement.
 
 ---
 
-## **10. Optional: Deploy a Deny Policy for SKUs**
+## **10. Enforce VM SKU Governance (Deny Policy)**
 
 Assign:
 
-**"Allowed virtual machine SKUs"**
+**Policy:** Allowed virtual machine size SKUs  
+**Scope:** `rg-test-compliant`
 
-**Azure Portal → Policy → Definitions → Search: "Allowed virtual machine SKUs"**
+### Allowed SKUs (validated list)
 
-**Click Assign:**
+```
+Standard_B1s
+Standard_B1ms
+Standard_B2s
+Standard_B2ms
+Standard_D2s_v3
+Standard_D2s_v5
+Standard_DS1_v2
+```
 
-- **Scope:** Select your subscription or resource group
-- **Parameters:**
-  - **Allowed SKUs:** Select:
-    - `Standard_B2s`  
-    - `Standard_D2s_v3`
-- **Review + create** → **Create**
+### Test
 
-Try to deploy a VM with a different SKU (e.g., `Standard_D4s_v3`).
+In `rg-test-compliant`:
 
-Expected:
+- Allowed SKUs → visible  
+- Disallowed SKUs → hidden or blocked  
 
-> "The resource is disallowed by policy."
+In `rg-bootcamp` (no policy):
 
-This is how enterprises enforce cost control and standardization.
-
----
-
-# 🧩 Governance + Identity Interaction (Important)
-
-### ✔ Locks override RBAC  
-Even **Owner** cannot delete a locked resource.
-
-### ✔ Policies override RBAC  
-Even **Contributor** cannot deploy non-compliant resources.
-
-### ✔ Directory roles do not affect locks or policies  
-Emma (User Administrator) cannot bypass:
-
-- Locks  
-- Policies  
-- RBAC  
-
-### ✔ RBAC controls *who* can act  
-Policies and locks control *what* is allowed.
-
-This is the foundation of Azure governance.
+- All SKUs → visible  
+- No restrictions  
 
 ---
 
-# 🧹 **Cleanup (Optional)**
+# 🧩 **Governance + Identity Interaction**
 
-To remove resources created in this lab:
-
-1. **Remove locks first:**
-   - Navigate to each locked resource
-   - Delete all locks
-
-2. **Remove policy assignments:**
-   - **Policy → Assignments → Select assignment → Delete**
-
-3. **Delete test resources:**
-   - Delete `rg-test-compliant` (if created)
-   - Delete `rg-locks-demo` (if not needed)
+- **Locks override RBAC**  
+- **Policies override RBAC**  
+- Directory roles cannot bypass governance  
+- RBAC = *who* can act  
+- Policy + Locks = *what* is allowed  
 
 ---
 
-# 📌 **Day 4 Summary**
+# 📘 **Lessons Learned — Day 4**
 
-Today you learned:
+### 1. Locks enforce operational safety  
+They prevent accidental changes and override RBAC.
 
-- How to apply **Delete** and **Read-only** locks  
-- How lock inheritance works  
-- How locks interact with RBAC  
-- How to assign Azure Policies  
-- How to enforce tagging, SKU restrictions, and compliance  
-- How governance controls override RBAC permissions  
-- How identity, RBAC, locks, and policy form a complete governance model  
+### 2. Lock inheritance is absolute  
+A lock at RG or subscription scope applies to all child resources.
 
-This is essential knowledge for real-world Azure environments and all three certifications.
+### 3. Read‑only lock testing must be isolated  
+Remove RG locks before testing resource‑level locks.
+
+### 4. Azure Policy defines *what* can be deployed  
+Deny, Audit, Modify effects enforce compliance at scale.
+
+### 5. Custom policies fill governance gaps  
+Your custom Audit policy provides visibility where no built‑in policy exists.
+
+### 6. The Azure Portal becomes governance‑aware  
+VM size dropdowns automatically filter based on allowed SKUs.
+
+### 7. SKU governance requires tuning  
+Default VM images often select SKUs not in your allowed list.
+
+### 8. Policy‑free vs policy‑enforced RGs behave differently  
+Your A/B comparison (`rg-bootcamp` vs `rg-test-compliant`) demonstrated real Landing Zone behavior.
 
 ---
 
-## ▶️ Next Lab
+# 🧹 **Cleanup (Optional but Recommended)**
+
+Perform these steps if you want to reset your environment before moving to Day 5.
+
+---
+
+## **1. Remove Locks**
+
+Locks must be removed **before** deleting any resource groups.
+
+### **Resource Group Locks**
+**Azure Portal → Resource groups → rg-locks-demo → Locks → Delete all locks**
+
+### **Resource-Level Locks**
+If you added a Read‑only lock:
+
+**Storage account → Locks → Delete**
+
+---
+
+## **2. Remove Policy Assignments**
+
+### **Custom Audit Policy**
+**Azure Portal → Policy → Assignments → audit-missing-environment-tag → Delete**
+
+### **SKU Restriction Policy**
+**Azure Portal → Policy → Assignments → Allowed virtual machine size SKUs → Delete**
+
+This ensures no Deny or Audit rules remain active.
+
+---
+
+## **3. Delete Test Resource Groups**
+
+Once locks and policies are removed:
+
+- Delete `rg-locks-demo`  
+- Delete `rg-test-compliant`  
+- Delete `rg-test-noncompliant`  
+- Keep `rg-bootcamp` if you plan to use it for future labs  
+
+---
+
+## **4. Verify a Clean State**
+
+Optional but helpful:
+
+- Open **Azure Policy → Compliance**  
+- Confirm no custom assignments remain  
+- Confirm no RGs are stuck in a locked state  
+
+---
+
+# **📘 Today You Learned**
+
+- How to apply **Delete** and **Read‑only** locks at different scopes  
+- How **lock inheritance** works and why resource‑level tests must be isolated  
+- How locks override RBAC and prevent accidental changes  
+- How to build and assign a **Custom Audit Policy** to detect missing tags on resource groups  
+- Why Azure does **not** provide a built‑in "Require tag on resource groups" policy  
+- How Audit policies provide visibility without blocking deployments  
+- How to enforce VM governance using the **Allowed virtual machine size SKUs** policy  
+- How Azure Policy dynamically **filters the VM size dropdown** to show only compliant SKUs  
+- How to compare behavior between **policy‑restricted** and **policy‑free** resource groups  
+- How governance controls (Locks + Policy) work together with RBAC to form a complete governance model  
+- How SKU governance requires tuning because default images often select disallowed SKUs  
+
+---
+
+## ▶️ **Next Lab**
 
 **Day 5 — Access Validation & Identity Troubleshooting**  
 `05-access-validation.md`
 
 ---
+// ...existing code... (lines 1-352)
+
+## 🔗 **Related Labs**
+
+- **Day 1 — RBAC Basics**  
+  `01-rbac-basics.md`
+
+- **Day 2 — Key Vault + Managed Identity**  
+  `02-keyvault-managed-identity.md`
+
+- **Day 3 — Identity-First VM Deployment**  
+  `03-identity-first-vm.md`
+
+- **Day 4 — Azure Locks + Resource Policies**  
+  `04-locks-resource-policies.md`
