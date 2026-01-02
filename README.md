@@ -70,11 +70,13 @@ A high-level view of the Boot Camp structure:
 ## **Week 1 — Identity & Governance**  
 [Identity, RBAC, Managed Identity](./azure-bootcamp/Week1-Identity-Governance/README.md)
 
-- Entra ID fundamentals  
-- RBAC scopes & inheritance  
-- Managed Identity patterns  
-- Key Vault identity access  
-- Identity-first architecture (Capstone 1)
+- RBAC
+- Key Vault + MI 
+- Identity-first VM 
+- Locks + Policy  
+- Access Validation
+- Monitor + Logs
+- Bicep Identity Stack
 
 ---
 
