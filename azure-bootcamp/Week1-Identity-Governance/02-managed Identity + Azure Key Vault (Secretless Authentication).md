@@ -340,5 +340,5 @@ Today you learned:
 ## ▶️ Next Lab
 
 **Day 3 — Azure AD Roles + RBAC Scopes**  
-Continue to [03-azuread-roles-rbac-scopes.md](03-azuread-roles-rbac-scopes.md)
+[03-azuread-roles-rbac-scopes.md](03-azuread-roles-rbac-scopes.md)
 
