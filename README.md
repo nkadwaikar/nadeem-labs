@@ -68,15 +68,19 @@ A high-level view of the Boot Camp structure:
 ---
 
 ## **Week 1 — Identity & Governance**  
-[Identity, RBAC, Managed Identity](./azure-bootcamp/Week1-Identity-Governance/README.md)
+📁 **Folder:** `azure-bootcamp/Week1-Identity-Governance/`  
+📘 **Overview:** [Week 1 README](azure-bootcamp/Week1-Identity-Governance/README.md)  
+🏗️ **Capstone:** [Identity-First Landing Zone](azure-bootcamp/Week1-Identity-Governance/capstone/week1-capstone.md)
 
-- RBAC
-- Key Vault + MI 
-- Identity-first VM 
+Covers:
+
+- RBAC  
+- Key Vault + Managed Identity  
+- Identity-first VM access  
 - Locks + Policy  
-- Access Validation
-- Monitor + Logs
-- Bicep Identity Stack
+- Access Validation  
+- Monitor + Logs  
+- Bicep Identity Stack  
 
 ---
 
@@ -132,7 +136,7 @@ A high-level view of the Boot Camp structure:
 ## **Week 7 — Architecture Deep Dive (AZ-305 Focus)**  
 - Hybrid identity architecture  
 - Data architecture & database decision frameworks  
-- Business continuity & disaster recovery (ASR, failover)  
+- Business continuity & disaster recovery  
 - API Management architecture  
 - Event-driven & integration patterns  
 - Caching & performance design  
@@ -164,17 +168,19 @@ A high-level view of the Boot Camp structure:
 
 ---
 
-## ✅ Completed Days (Growing List)
--
-- **Day 1:** [Identity Fundamentals + RBAC Basics](./azure-bootcamp/Week1-Identity-Governance/01-identity-fundamentals.md)
-- **Day 2:** [Managed Identity + Key Vault](./azure-bootcamp/Week1-Identity-Governance/02-managed-identity-key-vault.md)  
-- **Day 3:** [Entra ID Roles + RBAC Scopes](./azure-bootcamp/Week1-Identity-Governance/03-azuread-roles-rbac-scopes.md)
-- **Day 4:** [Locks + Policy](./azure-bootcamp/Week1-Identity-Governance/04-locks-resource-policies.md)
-- **Day 5:** [Access Validation](./azure-bootcamp/Week1-Identity-Governance/05-access-validation.md)
-- **Day 6:** [Monitor + Logs](./azure-bootcamp/Week1-Identity-Governance/06-azuremonitor-activity-logs.md)
+## ✅ Week 1 Progress
 
-This list grows as the Boot Camp progresses.  
-> ☕ Some labs take longer — it's okay to sip slowly and absorb the details.
+Week 1 is complete! Check out the capstone project:
+
+🏗️ **[Week 1 Capstone — Identity-First Landing Zone](azure-bootcamp/Week1-Identity-Governance/capstone/week1-capstone.md)**
+
+Includes:
+- User Assigned Managed Identity
+- Azure Key Vault (RBAC mode)
+- Resource Locks
+- Governance controls
+- Full Bicep deployment
+- VS Code-only workflow
 
 ---
 
@@ -182,24 +188,9 @@ This list grows as the Boot Camp progresses.
 
 ### **Azure Front Door — Routing & Global Delivery**
 
-A two-part guide covering routing and global content delivery for static websites:
+A comprehensive guide covering routing and global content delivery for static websites.
 
-**• Static Website Routing**  
-Connecting Azure Front Door to a static website and validating routing end-to-end.
-
-**• Modern CDN Delivery (Front Door Standard)**  
-Azure CDN is retired for new deployments — Front Door Standard now provides the modern CDN experience.
-
-This lab covers:
-
-- Global edge delivery  
-- Caching behavior  
-- Routing validation  
-- The small quirks you only notice after going global  
-
-📖 **[View Full Lab →](./labs/Azure%20Front%20Door-Static%20Website%20Hosting%20Lab.md)**  
-
-> ☕ Fun fact: Front Door labs pair perfectly with a strong espresso — global delivery never tasted so good.
+📖 **Coming Soon** — Lab documentation in progress
 
 ---
 
@@ -211,14 +202,10 @@ This lab covers:
 - Cache overrides  
 - Troubleshooting rule evaluation  
 
----
-
 ### **Azure Front Door Premium — Private Link End-to-End**
 - Private origins  
 - Locked-down storage accounts  
 - Global delivery without exposing backend services  
-
-> ☕ Advanced labs are best tackled with focus and your favorite cup of coffee nearby.
 
 ---
 
@@ -230,4 +217,16 @@ This lab covers:
 - Deploy compute workloads  
 - Secure workloads using identity  
 - Monitor & maintain Azure resources  
-- Architect scalable, secure cloud solutions
+- Architect scalable, secure cloud solutions  
+
+---
+
+## 🎉 Summary
+
+This repository represents a continuous journey of learning, building, and documenting Azure solutions with:
+
+- Identity-first security patterns
+- Production-ready architectures
+- Clear, repeatable documentation
+- Real-world scenarios
+- Coffee-fueled dedication ☕

@@ -1,5 +1,5 @@
 # 📘 Week 1 — Identity, RBAC & Managed Identity  
-### *Identity-first. Secure-by-default. Architect-ready.*
+*Identity-first. Secure-by-default. Architect-ready.*
 
 Week 1 establishes the foundation for all Azure workloads.  
 Identity is where access, automation, and security begin — so this week focuses on RBAC, Managed Identity, Key Vault, and the identity-driven patterns used in modern cloud environments.
@@ -14,7 +14,6 @@ Before starting Week 1, ensure you have:
 
 - **Azure Subscription** (Contributor or Owner access)
 - **Azure CLI** installed  
-  👉 https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 - **Bicep CLI** (`az bicep install`)
 - Basic familiarity with Azure Portal navigation
 
@@ -23,30 +22,19 @@ Before starting Week 1, ensure you have:
 ## 🎯 What You'll Learn This Week
 
 - How Azure AD (Entra ID), RBAC, and role assignments work  
-- How to enable and use **system-assigned managed identities**  
+- How to enable and use **system-assigned and user-assigned managed identities**  
 - How workloads authenticate to **Key Vault** and **Storage** without secrets  
 - How to validate access using the **Portal**, **CLI**, and **REST API**  
 - How to design identity-first architectures that scale  
-- How to deploy identity components using **Bicep**  
+- How to deploy identity components using **modular Bicep**  
 - How to think like an architect when designing secure access flows  
 
 ---
 
 ## 🧪 Hands-On Labs (Week 1)
 
-This week includes seven hands-on labs that build on each other.  
-**Estimated time: 8–10 hours total (~1.5 hours per day).**
-
-
-| Day | Topic | Duration | Lab File |
-|-----|-------|----------|----------|
-| **Day 1** | Identity Fundamentals + RBAC Basics | 1.5h | [01-identity-fundamentals.md](./01-identity-fundamentals.md) |
-| **Day 2** | Managed Identity + Azure Key Vault (Secretless Authentication) | 1.5h | [02-managed identity + azure key vault (secretless authentication).md](./02-managed%20Identity%20+%20Azure%20Key%20Vault%20(Secretless%20Authentication).md) | |
-| **Day 3** | Azure AD Roles + RBAC Scopes | 1.5h | [03-azuread-roles-rbac-scopes.md](./03-azuread-roles-rbac-scopes.md) |
-| **Day 4** | Azure Locks + Resource Policies | 1.5h | [04-locks-resource-policies.md](./04-locks-resource-policies.md) |
-| **Day 5** | Access Validation (Portal + CLI) | 1.5h | [05-access-validation.md](./05-access-validation.md) |
-| **Day 6** | Azure Monitor + Activity Logs | 1.5h | [06-azure-monitor-activity-logs.md](./06-azuremonitor-activity-logs.md) |
-| **Day 7** | Bicep Deployment — Identity Stack | 1.5h | [07-bicep-beployment-identity-stack.md](./07-bicep-deployment-identity-stack.md) |
+This week includes hands-on labs that build on each other.  
+**Estimated time: ~1.5 hours per lab.**
 
 Each lab includes step-by-step instructions, validation steps, troubleshooting patterns, and CLI/Portal walkthroughs.
 
@@ -54,7 +42,7 @@ Each lab includes step-by-step instructions, validation steps, troubleshooting p
 
 ## 🏗️ Week 1 Capstone — Identity-First Secure Workload Architecture
 
-A real-world scenario where a VM retrieves:
+A real-world scenario where a workload retrieves:
 
 - Secrets from **Key Vault**  
 - Configuration files from **Storage**  
@@ -70,15 +58,22 @@ This capstone demonstrates:
 - End-to-end validation  
 
 📁 **Capstone folder:**  
-[./capstone/](./capstone/)
+`capstone/`
 
 Includes:
 
-- Architecture diagram  
-- Bicep deployment  
+- Modular Bicep deployment (`bicep/`)  
 - RBAC assignments  
-- CLI + REST API validation  
-- Full walkthrough in its own README  
+- Identity-first access flow  
+- Governance flow  
+- Full walkthrough in [Week 1 Capstone](capstone/week1-capstone.md)
+
+**Supporting documentation:**
+
+- 📘 [VS Code Deployment Workflow](capstone/docs/vscode-deployment-workflow.md)  
+- 🔐 [Identity-First Access Flow](capstone/docs/identity-first-access-flow.md)  
+- 🛡️ [Governance Flow Diagram](capstone/docs/governance-flow.md)  
+- 📝 [Lessons Learned](capstone/docs/week1-lessons-learned.md)
 
 ---
 
@@ -86,15 +81,26 @@ Includes:
 
 ⚠️ **Important:** Delete all resources after completing labs to avoid unnecessary Azure charges.
 
-```powershell
+```bash
 az group delete --name <resource-group-name> --yes
 ```
 
 ---
 
-## ☕ Week 1 Summary
+## 🎉 Week 1 Summary
 
 By the end of Week 1, you will understand how Azure identity works in practice — not just conceptually, but through real workloads that authenticate and access resources securely.
+
+You will have:
+
+- A working identity-first architecture  
+- A modular Bicep stack  
+- RBAC-based access control  
+- A Key Vault in RBAC mode  
+- A managed identity with least-privilege permissions  
+- Governance controls (locks + policies)  
+- Observability via Azure Monitor + Log Analytics  
+- A capstone folder ready for CI/CD  
 
 This week sets the tone for the entire Boot Camp:  
 **clean, secure, identity-first cloud engineering.**
