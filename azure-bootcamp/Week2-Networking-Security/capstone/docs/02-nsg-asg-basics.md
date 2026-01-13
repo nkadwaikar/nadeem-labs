@@ -1,221 +1,176 @@
-# 🔐 **Day 2 — Network Security Groups (NSGs) & Application Security Groups (ASGs)**  
-### *Micro‑segmentation and workload‑aware security in Azure.*
 
-> **Note:** All steps today are performed as **alex.james@contoso.com** unless otherwise stated.  
-> This lab builds directly on the VNets and subnets created on Day 1.
+# 🔐 Day 2 — NSGs & ASGs (Portal)
+*Securing workloads with modular network controls.*
+
+This lab builds on your hub-and-spoke network by introducing Network Security Groups (NSGs) and Application Security Groups (ASGs) for micro-segmentation and subnet-level security. You’ll work as `alex.james@contoso.com` with Owner access, and validate everything using Azure Portal and VS Code.
 
 ---
 
-## 📋 **Prerequisites**
 
-Before starting this lab, ensure you have:
+---
 
-- Completed **Day 1 — VNet & Subnet Design**  
-- Hub VNet: `10.16.0.0/16`  
-- Spoke VNet: `10.0.0.0/12`  
+## 📋 Prerequisites
+
+- Day 1 lab completed (Hub & Spoke VNets with subnets)
+- Signed in as `alex.james@contoso.com`
+- Resource group: `rg-network-lab`
+- VNets:
+   - `vnet-hub` → `10.16.0.0/16`
+   - `vnet-spoke` → `10.0.0.0/12`
 - Subnets:
-  - `app-subnet` → `10.1.0.0/16`
-  - `data-subnet` → `10.2.0.0/16`
-  - `private-endpoint-subnet` → `10.3.0.0/16`
-- At least one VM in:
-  - `app-subnet`
-  - `data-subnet`
-
-**⏱️ Estimated Time:** 45–60 minutes
+   - `app-subnet` → `10.1.0.0/16`
+   - `data-subnet` → `10.2.0.0/16`
+   - `private-endpoint-subnet` → `10.3.0.0/16`
 
 ---
 
-## 🎯 **Objectives**
 
-By the end of this lab, you will:
+## 🎯 What You'll Learn
 
-- Understand the purpose of NSGs and ASGs  
-- Create workload‑aware ASGs  
-- Apply NSGs to subnets for layered security  
-- Implement least‑privilege rules between app and data tiers  
-- Validate effective security rules  
-- Prepare for Azure Firewall integration on Day 4
-
-## 🧠 **Concept Overview**
-
-### **NSGs (Network Security Groups)**  
-NSGs filter traffic at the **subnet** or **NIC** level.  
-They operate like stateless firewall rules.
-
-### **ASGs (Application Security Groups)**  
-ASGs group **VM NICs** logically (e.g., “app servers”, “data servers”).  
-They allow you to write rules like:
-
-```
-Allow asg-app → asg-data on port 1433
-```
-
-This is cleaner and more scalable than using IP addresses.
+- How to create three NSGs (App, Data, Private Endpoint)
+- How to create three ASGs (App, Data, Private Endpoint)
+- How to associate NSGs with subnets
+- How to validate NSG rules and ASG membership
+- How to prepare for Day 3: peering and firewall
 
 ---
 
-## 🧩 **Step 1 — Create Application Security Groups**
+## 🧠 Architecture Overview
 
-### **Create ASG for App Tier**
+```plaintext
+vnet-spoke
+├── app-subnet (NSG: nsg-app, ASG: asg-app)
+├── data-subnet (NSG: nsg-data, ASG: asg-data)
+└── private-endpoint-subnet (NSG: nsg-private, ASG: asg-private)
+```
 
-1. Go to **Application Security Groups**
-2. Click **Create**
+---
+
+# 🛠️ Step 1 — Create NSGs
+
+Repeat the following steps for each NSG:
+
+### NSG: `nsg-app`
+
+1. Go to **Networking → Network security groups**  
+2. Click **Create**  
 3. Fill in:
-   - **Name:** `asg-app`
-   - **Resource group:** `rg-network-lab`
-   - **Region:** Same as VNets
+   - Name: `nsg-app`
+   - Resource group: `rg-network-lab`
+   - Region: Same as VNet  
 4. Click **Review + Create** → **Create**
 
-### **Create ASG for Data Tier**
+Repeat for:
 
-Repeat the steps with:
-
-- **Name:** `asg-data`
-
----
-
-## 🧩 **Step 2 — Assign VMs to ASGs**
-
-### **Assign App VM to `asg-app`**
-
-1. Go to **Virtual machines**
-2. Select your **App VM**
-3. Go to **Networking**
-4. Under **Application security groups**, click **Configure**
-5. Select **asg-app**
-6. Save
-
-### **Assign Data VM to `asg-data`**
-
-Repeat the steps for the Data VM.
+- `nsg-data`  
+- `nsg-private`
 
 ---
 
-## 🧩 **Step 3 — Create NSGs for Subnets**
+# 🛠️ Step 2 — Create ASGs
 
-We will create two NSGs:
+Repeat the following steps for each ASG:
 
-- `nsg-app`
-- `nsg-data`
+### ASG: `asg-app`
 
-### **Create NSG for App Subnet**
-
-1. Go to **Network security groups**
-2. Click **Create**
+1. Go to **Networking → Application security groups**  
+2. Click **Create**  
 3. Fill in:
-   - **Name:** `nsg-app`
-   - **Resource group:** `rg-network-lab`
+   - Name: `asg-app`
+   - Resource group: `rg-network-lab`
+   - Region: Same as VNet  
 4. Click **Review + Create** → **Create**
 
-### **Create NSG for Data Subnet**
+Repeat for:
 
-Repeat with:
-
-- **Name:** `nsg-data`
-
----
-
-## 🧩 **Step 4 — Associate NSGs with Subnets**
-
-### **Associate `nsg-app` with `app-subnet`**
-
-1. Open **nsg-app**
-2. Go to **Subnets**
-3. Click **Associate**
-4. Select:
-   - **VNet:** `vnet-spoke`
-   - **Subnet:** `app-subnet`
-
-### **Associate `nsg-data` with `data-subnet`**
-
-Repeat for `nsg-data`.
+- `asg-data`  
+- `asg-private`
 
 ---
 
-## 🧩 **Step 5 — Create Least‑Privilege NSG Rules**
+# 🛠️ Step 3 — Associate NSGs with Subnets
 
-### **Rule 1 — Allow App → Data (Port 1433)**
+### Associate `nsg-app` with `app-subnet`
 
-In **nsg-data → Inbound security rules**:
+1. Go to **Virtual networks → vnet-spoke → Subnets**  
+2. Select `app-subnet`  
+3. Under **Network security group**, choose `nsg-app`  
+4. Save
 
-| Setting | Value |
-|---------|--------|
-| Source | Application Security Group |
-| Source ASG | `asg-app` |
-| Destination | Application Security Group |
-| Destination ASG | `asg-data` |
-| Protocol | TCP |
-| Port | 1433 |
-| Action | Allow |
-| Priority | 200 |
+Repeat for:
 
-### **Rule 2 — Deny Data → App**
-
-In **nsg-app → Inbound security rules**:
-
-| Setting | Value |
-|---------|--------|
-| Source | ASG |
-| Source ASG | `asg-data` |
-| Destination | ASG |
-| Destination ASG | `asg-app` |
-| Protocol | Any |
-| Port | Any |
-| Action | Deny |
-| Priority | 300 |
-
-### **Rule 3 — Allow outbound to Azure Firewall (Day 4)**
-
-In both NSGs:
-
-| Setting | Value |
-|---------|--------|
-| Destination | IP Address |
-| IP | `<Azure Firewall private IP>` (placeholder for Day 4) |
-| Port | Any |
-| Action | Allow |
-| Priority | 100 |
+- `data-subnet` → `nsg-data`  
+- `private-endpoint-subnet` → `nsg-private`
 
 ---
 
-## 🔍 **Step 6 — Validate Effective Security Rules**
+# 🛠️ Step 4 — Add NSG Rules (Optional for Day 2)
 
-### **Using Azure Portal**
+You can optionally add basic rules to each NSG:
 
-1. Go to **App VM → Networking**
-2. Click **Effective security rules**
-3. Confirm:
-   - App → Data allowed on 1433  
-   - Data → App denied  
-   - Outbound allowed only to firewall (placeholder)  
+### Example: Allow RDP from your IP
 
-### **Using VM Testing (Optional)**
+1. Go to `nsg-app` → **Inbound security rules**  
+2. Click **Add**  
+3. Fill in:
+   - Name: `Allow-RDP`
+   - Priority: `100`
+   - Source: `IP Addresses` → your public IP  
+   - Destination: `Any`
+   - Port: `3389`
+   - Protocol: `TCP`
+   - Action: `Allow`  
+4. Save
 
-From App VM:
-
-```
-Test-NetConnection <DataVMPrivateIP> -Port 1433
-```
-
-Expected: **Success**
-
-From Data VM:
-
-```
-Test-NetConnection <AppVMPrivateIP> -Port 1433
-```
-
-Expected: **Blocked**
+Repeat for other NSGs if needed.
 
 ---
 
-## 🎉 ** Today you learned:**
+# 🛠️ Step 5 — Validate ASGs (Optional for Day 2)
 
-You now have:
+ASGs are used in NSG rules to group workloads.  
+You’ll assign VMs to ASGs on Day 3.
 
-- Logical workload groups using ASGs  
-- Subnet-level filtering using NSGs  
-- Least‑privilege rules between app and data tiers  
-- A security foundation ready for Azure Firewall on Day 4  
-- Hands-on experience with micro‑segmentation  
+For now, confirm:
 
+- `asg-app`, `asg-data`, `asg-private` exist  
+- Region matches VNet  
+- Resource group is correct
+
+---
+
+
+## 🔍 Validation Checklist
+
+| Item | Expected |
+|------|----------|
+| NSGs created | `nsg-app`, `nsg-data`, `nsg-private` |
+| ASGs created | `asg-app`, `asg-data`, `asg-private` |
+| NSGs associated | Each NSG linked to correct subnet |
+| ASGs validated | Exist, correct region, correct RG |
+| No errors | ✔ |
+
+---
+
+
+---
+
+## 🎉 Summary
+
+By the end of Day 2, you have:
+
+- Modular NSGs for each workload tier
+- ASGs ready for VM grouping
+- Subnet-level security enforcement
+- A clean foundation for Day 3 peering and firewall rules
+
+---
+
+## ▶️ Next Lab
+
+**Day 3 — Hub-Spoke Architecture & Peering**  
+[03-hub-spoke-peering.md](03-hub-spoke-peering.md)
+
+---
+
+## 🔗 Related Resources

@@ -1,81 +1,73 @@
 
-# 🌐 Day 1 — VNet & Subnet Design (Portal)
+# 🌐 Day 1 — Virtual Networks & Subnets (Portal)
 *The network backbone of every secure Azure architecture.*
 
-> **Note:** All user accounts in this lab use the placeholder domain **@contoso.com**. The baseline lab user is **alex.james@contoso.com**.
-> 
-> **Steps 1 and 2 are performed by administrators with elevated privileges.**
+This lab establishes the foundation for your Azure network. You'll design and deploy a hub-and-spoke architecture, apply enterprise-grade address planning, and validate your setup using the Azure Portal and VS Code. All user accounts use the placeholder domain **@contoso.com** to avoid exposing the real Azure AD tenant domain. The baseline lab user is **alex.james@contoso.com**.
+
+> **Note:** Steps 1 and 2 are performed by administrators with elevated privileges.
+
+---
+
 
 ---
 
 ## 📋 Prerequisites
 
-Before starting this lab, ensure you have:
-
-- **Azure Subscription** (**Contributor** or **Owner** access)
-- Basic familiarity with IP addressing (**CIDR** notation)
-- Test user **alex.james@contoso.com** created (from Week 1)
-- Access to **Azure Portal**
-- **VS Code** with Azure extensions (for validation)
+- **Azure Subscription** (Owner access)
+- Basic familiarity with CIDR notation
+- Test user `alex.james@contoso.com` created in Week 1
+- Access to Azure Portal
+- VS Code with Azure extensions
 
 **⏱️ Estimated Time:** 30–45 minutes
 
 ---
 
-## 👨‍💼 Step 1: Create Resource Group (Admin)
+## 👨‍💼 Admin Task — Step 1: Create Resource Group
 
-**Performed by an administrator (not the student user).**
-
-**Using Azure Portal:**
-1. **Open** Azure Portal
-2. **Search** for **Resource groups**
-3. **Click** **Create**
-4. **Fill in:**
-   - **Subscription:** Select your subscription
-   - **Resource group:** `rg-network-lab`
-   - **Region:** Your preferred region (e.g., East US)
-5. **Click** **Review + Create** → **Create**
-
-*This resource group will host all Week 2 networking components.*
+1. Open Azure Portal  
+2. Search for **Resource groups**  
+3. Click **Create**  
+4. Fill in:
+   - Resource group: `rg-network-lab`
+   - Region: Your preferred region  
+5. Select **Review + Create** → **Create**
 
 ---
 
-## 👨‍💼 Step 2: Assign Contributor Role to Alex (Admin)
+## 👨‍💼 Admin Task — Step 2: Assign Owner Role to Alex
 
-**Using Azure Portal:**
-1. **Go to** **Resource groups** → `rg-network-lab`
-2. **Click** **Access control (IAM)**
-3. **Click** **Add** → **Add role assignment**
-4. **Select** **Contributor**
-5. **Search for** `alex.james@contoso.com` and assign
-
----
-
-## 🧪 Step 3: Login as Alex (Student)
-
-1. **Open** a private/incognito browser window
-2. **Go to** **portal.azure.com**
-3. **Sign in** with **alex.james@contoso.com**
-4. **Accept** any first-time login prompts
-
-*All remaining steps in this lab are performed as alex.james@contoso.com.*
+1. Go to **rg-network-lab**  
+2. Open **Access control (IAM)**  
+3. Add role assignment → **Owner**  
+4. Assign to `alex.james@contoso.com`  
+5. Select **Review + assign**
 
 ---
 
-## 🎯 Objectives
+## 🧪 Step 3: Login as Alex James
 
-By the end of this lab, you will:
+1. Open a private/incognito browser  
+2. Go to **portal.azure.com**  
+3. Sign in with `alex.james@contoso.com`  
 
-- **Design** a clean, scalable IP addressing strategy
-- **Create** a **Hub VNet** and **Spoke VNet** using enterprise ranges
-- **Segment** the spoke into `/16` subnets for App, Data, and Private Endpoints
-- **Validate** deployments using Azure Portal and VS Code Azure Explorer
+All remaining steps are performed as Alex.
+
+---
+
+
+## 🎯 What You'll Learn
+
+- How to design and deploy a Hub VNet and Spoke VNet
+- How to apply a clean, scalable IP addressing strategy
+- How to create `/16` workload subnets
+- How to validate your network using Azure Portal and VS Code
 
 ---
 
 ## 🧠 Architecture Overview
 
-```plaintext
+```
                 ┌──────────────────────────────┐
                 │            HUB VNET           │
                 │         10.16.0.0/16          │
@@ -92,85 +84,195 @@ By the end of this lab, you will:
 
 ## 📐 IP Addressing Strategy
 
-| VNet   | Address Space   | Purpose                                 |
-|--------|-----------------|-----------------------------------------|
-| **Hub**   | `10.16.0.0/16`   | Shared services, firewall, gateway (future) |
-| **Spoke** | `10.0.0.0/12`    | Workloads, app/data tiers, private endpoints |
+| VNet | Address Space | Purpose |
+|------|---------------|---------|
+| Hub | `10.16.0.0/16` | Shared services, firewall, gateway |
+| Spoke | `10.0.0.0/12` | App, data, private endpoints |
 
 Subnets:
 
-| Subnet                   | CIDR              | Purpose                        |
-|--------------------------|-------------------|--------------------------------|
-| `temp-subnet`            | `10.16.0.0/24`    | Placeholder (replaced on Day 3) |
-| `app-subnet`             | `10.1.0.0/16`     | App workloads                   |
-| `data-subnet`            | `10.2.0.0/16`     | Data workloads                  |
-| `private-endpoint-subnet`| `10.3.0.0/16`     | Private endpoints               |
+| Subnet | CIDR | Purpose |
+|--------|------|---------|
+| temp-subnet | `10.16.0.0/24` | Placeholder (Hub) |
+| app-subnet | `10.1.0.0/16` | App tier |
+| data-subnet | `10.2.0.0/16` | Data tier |
+| private-endpoint-subnet | `10.3.0.0/16` | Private endpoints |
 
 ---
 
-## 🛠️ Step 4: Create Hub VNet
+# ⚠️ Address Space Clarification — Avoiding Errors
 
-> **Note:** Azure requires at least one subnet when creating a VNet. We will create a **temporary subnet** that will be replaced later.
+Azure auto‑creates a default address space when creating a VNet.
 
-**Using Azure Portal:**
-1. **Go to** **Virtual Networks** → **Create**
-2. **Basics tab:**
-   - **Resource group:** `rg-network-lab`
-   - **Name:** `vnet-hub`
-   - **Region:** Same as resource group
-3. **IP Addresses tab:**
-   - **Address space:** `10.16.0.0/16`
-   - **Add subnet:**
-     - Name: `temp-subnet`
-     - Range: `10.16.0.0/24`
-4. **Click** **Review + Create** → **Create**
+### For Hub:
+Azure usually auto‑populates:
+```
+10.0.0.0/16
+```
 
----
+You must edit this to:
+```
+10.16.0.0/16
+```
 
-## 🛠️ Step 5: Create Spoke VNet
+### For Spoke:
+Azure may auto‑populate:
+```
+10.0.0.0/24   ← common
+```
+or:
+```
+10.0.0.0/16   ← also common
+```
 
-**Using Azure Portal:**
-1. **Go to** **Virtual Networks** → **Create**
-2. **Basics tab:**
-   - **Resource group:** `rg-network-lab`
-   - **Name:** `vnet-spoke`
-   - **Region:** Same as hub
-3. **IP Addresses tab:**
-   - **Address space:** `10.0.0.0/12`
-   - **Add subnet:** `app-subnet` → `10.1.0.0/16`
-   - **Add subnet:** `data-subnet` → `10.2.0.0/16`
-   - **Add subnet:** `private-endpoint-subnet` → `10.3.0.0/16`
-4. **Click** **Review + Create** → **Create**
+Both are normal.
 
----
-
-## 🔍 Validation Steps
-
-### In Azure Portal
-- **Confirm** both VNets exist in `rg-network-lab`
-- **Confirm** all subnets are created
-- **Confirm** address spaces match your plan
-
-### In VS Code Azure Explorer
-- **Expand** your resource group `rg-network-lab`
-- **Confirm** `vnet-hub` and `vnet-spoke` appear
-- **Expand** each VNet to see subnets
-
----
-
-## 🧹 Cleanup (Optional)
-
-To clean up after the lab (**admin task**):
-
-```bash
-az group delete --name rg-network-lab --yes
+You must replace it with:
+```
+10.0.0.0/12
 ```
 
 ---
 
-## 🎉 Today you learned:
+# ❗ Fixing the “default subnet” error (Spoke)
 
-- A scalable, enterprise‑grade IP addressing plan
-- A hub VNet with a minimal placeholder subnet
-- A spoke VNet with three `/16` workload subnets
-- Hands-on experience creating VNets as a non-admin user with Contributor access
+Azure auto‑creates this subnet:
+
+```
+default
+10.0.0.0/24
+```
+
+This subnet **must be deleted**, because it blocks the `/12` address space.
+
+If Azure shows:
+
+> “Subnet 'default' is not valid because its IP address range is outside the IP address range of virtual network 'vnet-spoke'.”
+
+### Fix:
+
+1. Go to **vnet-spoke → Subnets**  
+2. Delete the `default` subnet  
+3. Return to **Address space**  
+4. Replace the address space with:
+
+```
+10.0.0.0/12
+```
+
+5. Save  
+6. Add your `/16` subnets normally  
+
+---
+
+# 🛠️ Step 4 — Create Hub VNet
+
+1. Virtual Networks → **Create**  
+2. Basics:
+   - Name: `vnet-hub`
+   - Resource group: `rg-network-lab`
+3. IP Addresses:
+   - Edit default → `10.16.0.0/16`
+   - Add subnet:
+     - Name: `temp-subnet`
+     - Range: `10.16.0.0/24`
+4. Select **Review + Create** → **Create**
+
+---
+
+# 🛠️ Step 5 — Create Spoke VNet
+
+1. Virtual Networks → **Create**  
+2. Basics:
+   - Name: `vnet-spoke`
+   - Resource group: `rg-network-lab`
+
+---
+
+## ✔ Fix the Address Space
+
+Azure may auto‑populate:
+
+```
+10.0.0.0/24
+```
+or:
+```
+10.0.0.0/16
+```
+
+Replace it with:
+
+```
+10.0.0.0/12
+```
+
+If Azure blocks the change:
+
+- Delete the `default` subnet  
+- Try again  
+
+---
+
+## ✔ Add the Spoke Subnets
+
+Add the following:
+
+### app-subnet
+```
+10.1.0.0/16
+```
+
+### data-subnet
+```
+10.2.0.0/16
+```
+
+### private-endpoint-subnet
+```
+10.3.0.0/16
+```
+
+Azure may not show `/16` in the dropdown — type it manually.
+
+---
+
+
+## 🔍 Validation Checklist
+
+| Item | Expected |
+|------|----------|
+| Hub VNet | `10.16.0.0/16` |
+| temp-subnet | `10.16.0.0/24` |
+| Spoke VNet | `10.0.0.0/12` |
+| app-subnet | `10.1.0.0/16` |
+| data-subnet | `10.2.0.0/16` |
+| private-endpoint-subnet | `10.3.0.0/16` |
+| default subnet removed | ✔ |
+
+---
+
+
+---
+
+## 🎉 Summary
+
+By the end of Day 1, you have:
+
+- A clean Hub VNet (`10.16.0.0/16`)
+- A scalable Spoke VNet (`10.0.0.0/12`)
+- Three `/16` workload subnets
+- Correct handling of Azure’s auto‑created default subnet
+- A fully validated, enterprise‑grade network foundation
+
+---
+
+## ▶️ Next Lab
+
+**Day 2 — NSGs & ASGs**  
+[02-nsg-asg-basics.md](02-nsg-asg-basics.md)
+
+---
+
+## 🔗 Related Resources
+
